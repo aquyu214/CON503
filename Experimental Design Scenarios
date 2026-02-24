@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Experimental Design Scenarios Interactive</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #1d4ed8;
+      --accent-soft: #dbeafe;
+      --ok: #166534;
+      --ok-bg: #dcfce7;
+      --warn: #92400e;
+      --warn-bg: #fef3c7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.45;
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      margin: 0 0 6px 0;
+      font-size: 1.5rem;
+    }
+    .sub { color: var(--muted); margin: 0; }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    button {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    button.primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    button:hover { filter: brightness(0.98); }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 16px;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .scenario-list {
+      display: grid;
+      gap: 12px;
+    }
+    .scenario-btn {
+      text-align: left;
+      width: 100%;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .scenario-btn.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+    .scenario-title { font-weight: 700; margin-bottom: 4px; }
+    .scenario-preview { color: var(--muted); font-size: 0.9rem; }
+    .scenario-text {
+      white-space: pre-wrap;
+      background: #fbfcfe;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-weight: 700;
+      margin: 14px 0 8px;
+      font-size: 1rem;
+    }
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    select, input[type="text"], textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 0.95rem;
+      background: white;
+    }
+    textarea { min-height: 70px; resize: vertical; }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .row3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .helper { color: var(--muted); font-size: 0.85rem; margin-top: 3px; }
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+    .status {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      display: none;
+    }
+    .status.show { display: block; }
+    .status.ok { background: var(--ok-bg); color: var(--ok); border-color: #bbf7d0; }
+    .status.warn { background: var(--warn-bg); color: var(--warn); border-color: #fde68a; }
+    .answer-key {
+      margin-top: 14px;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 12px;
+      background: #f8fafc;
+      display: none;
+    }
+    .answer-key.show { display: block; }
+    .answer-key h4 { margin: 0 0 8px 0; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      color: #1e40af;
+      margin-left: 8px;
+    }
+    .mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin-top: 6px;
+    }
+    .mini-table th, .mini-table td {
+      border: 1px solid var(--line);
+      padding: 8px;
+      vertical-align: top;
+    }
+    .mini-table th { background: #f9fafb; text-align: left; }
+    details summary {
+      cursor: pointer;
+      font-weight: 700;
+      margin-top: 14px;
+    }
+    .checklist { margin: 8px 0 0; padding-left: 20px; }
+    .sticky-actions {
+      position: sticky;
+      bottom: 10px;
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+      background: rgba(247,248,251,0.8);
+      backdrop-filter: blur(4px);
+      padding-top: 8px;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .row, .row3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <h1>Experimental Design Scenarios Interactive Practice</h1>
+      <p class="sub">CON 503 • Class activity for identifying experimental type, specific design, variables, random assignment, and control group.</p>
+      <div class="toolbar">
+        <button id="toggleTeacherMode">Show Answer Key (Teacher Mode)</button>
+        <button id="resetCurrent">Reset Current Scenario</button>
+        <button id="resetAll">Reset All</button>
+        <button id="exportJSON">Export Responses (.json)</button>
+      </div>
+      <p class="footer-note">Student responses are saved locally in the browser (localStorage). They stay on this device unless you export them.</p>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <div class="section-title">Scenarios</div>
+        <div class="scenario-list" id="scenarioList"></div>
+
+        <details>
+          <summary>Quick concept guide (for students)</summary>
+          <ul class="checklist">
+            <li><strong>True experiment:</strong> researcher manipulates the independent variable and uses random assignment.</li>
+            <li><strong>Quasi-experiment:</strong> no random assignment, but there may be comparison groups and/or pre-post measures.</li>
+            <li><strong>Pre-experiment:</strong> weak control (often no random assignment, no control group, and/or posttest only).</li>
+            <li><strong>Skip logic vs display logic vs branching</strong> is for surveys; here, focus on design classification and variables.</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary>How to use in Canvas</summary>
+          <ul class="checklist">
+            <li>Host this file on GitHub Pages (or Netlify/Vercel).</li>
+            <li>Add to Canvas as an <strong>External URL</strong> or embed in a Canvas page using an iframe (if allowed).</li>
+            <li>For graded submission, ask students to upload a screenshot or exported JSON file.</li>
+          </ul>
+        </details>
+      </div>
+
+      <div class="panel" id="workPanel">
+        <div id="scenarioHeader" class="section-title">Scenario 1</div>
+        <div id="scenarioText" class="scenario-text"></div>
+
+        <div class="row">
+          <div>
+            <label for="experimentalType">Experimental Type</label>
+            <select id="experimentalType">
+              <option value="">-- Select --</option>
+              <option>True experiment</option>
+              <option>Quasi-experiment</option>
+              <option>Pre-experiment</option>
+            </select>
+          </div>
+          <div>
+            <label for="specificDesign">Specific Design</label>
+            <select id="specificDesign">
+              <option value="">-- Select --</option>
+              <option>Randomized block design</option>
+              <option>Posttest-only control group design</option>
+              <option>Pretest-posttest control group design</option>
+              <option>Nonequivalent control group pretest-posttest design</option>
+              <option>One-group pretest-posttest design</option>
+              <option>One-shot case study</option>
+              <option>Matched-pairs randomized design</option>
+              <option>Other / explain in notes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="independentVar">Independent Variable(s)</label>
+            <textarea id="independentVar" placeholder="Example: break schedule / training / boot type"></textarea>
+          </div>
+          <div>
+            <label for="dependentVar">Dependent Variable(s)</label>
+            <textarea id="dependentVar" placeholder="Example: productivity, safety awareness, fatigue"></textarea>
+          </div>
+        </div>
+
+        <div class="row3">
+          <div>
+            <label for="randomAssignment">Random Assignment?</label>
+            <select id="randomAssignment">
+              <option value="">-- Select --</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+          <div>
+            <label for="controlGroup">Control Group Included?</label>
+            <select id="controlGroup">
+              <option value="">-- Select --</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
+          <div>
+            <label for="confidence">Confidence</label>
+            <select id="confidence">
+              <option value="">-- Select --</option>
+              <option>High</option>
+              <option>Medium</option>
+              <option>Low</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="reasoning">Reasoning / Notes (optional but recommended)</label>
+        <textarea id="reasoning" placeholder="Explain why you chose the design type and specific design. What clues did you use (random assignment, pretest/posttest, control group, matching)?"></textarea>
+        <div class="helper">Tip: Tell students to look for key clues: random assignment, control/comparison group, pretest/posttest, matching, and manipulation of the independent variable.</div>
+
+        <div class="sticky-actions">
+          <button class="primary" id="saveScenario">Save Scenario</button>
+          <button id="prevScenario">← Previous</button>
+          <button id="nextScenario">Next →</button>
+          <button id="checkCompletion">Check Completion</button>
+        </div>
+        <div id="statusBox" class="status"></div>
+
+        <div id="answerKey" class="answer-key">
+          <h4>Suggested Instructor Key <span class="badge">Editable / discussable</span></h4>
+          <div id="answerKeyContent"></div>
+          <p class="helper">Note: Some labels may vary by textbook/instructor (e.g., exact naming of the specific design). Use this as a teaching key, not an absolute grading script.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px;">
+      <div class="section-title">Worksheet Summary (All Scenarios)</div>
+      <table class="mini-table" id="summaryTable">
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Experimental Type</th>
+            <th>Specific Design</th>
+            <th>Independent Variable(s)</th>
+            <th>Dependent Variable(s)</th>
+            <th>Random Assignment?</th>
+            <th>Control Group?</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const scenarios = [
+      {
+        id: 1,
+        title: 'Scenario 1',
+        text: `A researcher wants to study how break frequency affects worker productivity in a construction firm. Since the type of work may influence how break schedules impact productivity, workers are first grouped based on job type:\n• Skilled Laborers (e.g., carpenters, electricians)\n• Heavy Equipment Operators\nWithin each job type, workers are then randomly assigned to one of three break schedules:\n• Group A: 15-minute breaks every 2 hours\n• Group B: 30-minute breaks every 4 hours\n• Group C: No scheduled breaks\nResearchers compare productivity outcomes across groups.` ,
+        key: {
+          experimentalType: 'True experiment',
+          specificDesign: 'Randomized block design',
+          independentVar: 'Break schedule / break frequency (and duration)',
+          dependentVar: 'Worker productivity',
+          randomAssignment: 'Yes',
+          controlGroup: 'Yes',
+          notes: 'Workers are blocked by job type, then randomly assigned within blocks. Group C can function as a control/comparison condition.'
+        }
+      },
+      {
+        id: 2,
+        title: 'Scenario 2',
+        text: `A construction manager wants to improve workers’ safety awareness by placing large posters on job sites that display common hazards and safety rules. After two months, workers are surveyed about their awareness of hazards.` ,
+        key: {
+          experimentalType: 'Pre-experiment',
+          specificDesign: 'One-shot case study',
+          independentVar: 'Safety poster intervention (hazard/safety-rule posters)',
+          dependentVar: 'Workers’ safety awareness (survey responses)',
+          randomAssignment: 'No',
+          controlGroup: 'No',
+          notes: 'There is an intervention and a posttest-like measurement, but no pretest, no random assignment, and no control group.'
+        }
+      },
+      {
+        id: 3,
+        title: 'Scenario 3',
+        text: `A construction company implements a new leadership training program for site supervisors aimed at improving safety culture and compliance. The company selects two similar construction sites with ongoing projects: at one site, supervisors receive the leadership training, while at the other site, they do not. Before the training, data on safety violation rates, near-miss reports, and worker perception of safety culture are collected at both sites. After a three-month period, the same data are collected again to assess the impact of the training.` ,
+        key: {
+          experimentalType: 'Quasi-experiment',
+          specificDesign: 'Nonequivalent control group pretest-posttest design',
+          independentVar: 'Leadership training program for site supervisors',
+          dependentVar: 'Safety violation rates; near-miss reports; worker perception of safety culture',
+          randomAssignment: 'No',
+          controlGroup: 'Yes',
+          notes: 'There are comparison groups and pre/post measures, but assignment to sites is not random.'
+        }
+      },
+      {
+        id: 4,
+        title: 'Scenario 4',
+        text: `A construction company wants to test whether a new type of safety boot reduces worker fatigue compared to standard boots. To control for individual differences, each worker is paired with another worker of similar physical condition, workload, and experience level. Within each pair, one worker is randomly assigned to wear the new safety boots, while the other wears the standard boots. After a full work shift, researchers measure fatigue levels in both groups and compare the results within each matched pair.` ,
+        key: {
+          experimentalType: 'True experiment',
+          specificDesign: 'Matched-pairs randomized design',
+          independentVar: 'Type of safety boot (new vs standard)',
+          dependentVar: 'Worker fatigue level after a work shift',
+          randomAssignment: 'Yes',
+          controlGroup: 'Yes',
+          notes: 'Participants are matched into pairs, then randomly assigned within each pair. Standard boot condition functions as a control/comparison.'
+        }
+      }
+    ];
+
+    const STORAGE_KEY = 'exp_design_scenarios_v1';
+    let currentIndex = 0;
+    let teacherMode = false;
+    let state = loadState();
+
+    const els = {
+      scenarioList: document.getElementById('scenarioList'),
+      scenarioHeader: document.getElementById('scenarioHeader'),
+      scenarioText: document.getElementById('scenarioText'),
+      experimentalType: document.getElementById('experimentalType'),
+      specificDesign: document.getElementById('specificDesign'),
+      independentVar: document.getElementById('independentVar'),
+      dependentVar: document.getElementById('dependentVar'),
+      randomAssignment: document.getElementById('randomAssignment'),
+      controlGroup: document.getElementById('controlGroup'),
+      confidence: document.getElementById('confidence'),
+      reasoning: document.getElementById('reasoning'),
+      statusBox: document.getElementById('statusBox'),
+      answerKey: document.getElementById('answerKey'),
+      answerKeyContent: document.getElementById('answerKeyContent'),
+      summaryTableBody: document.querySelector('#summaryTable tbody'),
+      toggleTeacherMode: document.getElementById('toggleTeacherMode'),
+      resetCurrent: document.getElementById('resetCurrent'),
+      resetAll: document.getElementById('resetAll'),
+      saveScenario: document.getElementById('saveScenario'),
+      prevScenario: document.getElementById('prevScenario'),
+      nextScenario: document.getElementById('nextScenario'),
+      checkCompletion: document.getElementById('checkCompletion'),
+      exportJSON: document.getElementById('exportJSON')
+    };
+
+    function emptyResponse() {
+      return {
+        experimentalType: '',
+        specificDesign: '',
+        independentVar: '',
+        dependentVar: '',
+        randomAssignment: '',
+        controlGroup: '',
+        confidence: '',
+        reasoning: ''
+      };
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        const initial = {};
+        scenarios.forEach(s => initial[s.id] = emptyResponse());
+        return initial;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        scenarios.forEach(s => { if (!parsed[s.id]) parsed[s.id] = emptyResponse(); });
+        return parsed;
+      } catch {
+        const fallback = {};
+        scenarios.forEach(s => fallback[s.id] = emptyResponse());
+        return fallback;
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderSummary();
+    }
+
+    function showStatus(msg, type='ok') {
+      els.statusBox.textContent = msg;
+      els.statusBox.className = `status show ${type}`;
+      setTimeout(() => {
+        els.statusBox.className = 'status';
+      }, 2500);
+    }
+
+    function currentScenario() {
+      return scenarios[currentIndex];
+    }
+
+    function renderScenarioList() {
+      els.scenarioList.innerHTML = '';
+      scenarios.forEach((s, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'scenario-btn' + (idx === currentIndex ? ' active' : '');
+        const resp = state[s.id] || emptyResponse();
+        const filled = ['experimentalType','specificDesign','independentVar','dependentVar','randomAssignment','controlGroup']
+          .filter(k => (resp[k] || '').trim() !== '').length;
+        btn.innerHTML = `
+          <div class="scenario-title">${s.title}</div>
+          <div class="scenario-preview">${s.text.slice(0, 90)}${s.text.length > 90 ? '…' : ''}</div>
+          <div class="helper">Core fields completed: ${filled}/6</div>
+        `;
+        btn.addEventListener('click', () => {
+          saveCurrentInputsToState();
+          currentIndex = idx;
+          renderAll();
+        });
+        els.scenarioList.appendChild(btn);
+      });
+    }
+
+    function renderWorkPanel() {
+      const s = currentScenario();
+      const resp = state[s.id] || emptyResponse();
+
+      els.scenarioHeader.textContent = `${s.title}`;
+      els.scenarioText.textContent = s.text;
+
+      els.experimentalType.value = resp.experimentalType || '';
+      els.specificDesign.value = resp.specificDesign || '';
+      els.independentVar.value = resp.independentVar || '';
+      els.dependentVar.value = resp.dependentVar || '';
+      els.randomAssignment.value = resp.randomAssignment || '';
+      els.controlGroup.value = resp.controlGroup || '';
+      els.confidence.value = resp.confidence || '';
+      els.reasoning.value = resp.reasoning || '';
+
+      if (teacherMode) {
+        els.answerKey.classList.add('show');
+        const k = s.key;
+        els.answerKeyContent.innerHTML = `
+          <p><strong>Experimental Type:</strong> ${k.experimentalType}</p>
+          <p><strong>Specific Design:</strong> ${k.specificDesign}</p>
+          <p><strong>Independent Variable(s):</strong> ${k.independentVar}</p>
+          <p><strong>Dependent Variable(s):</strong> ${k.dependentVar}</p>
+          <p><strong>Random Assignment?</strong> ${k.randomAssignment}</p>
+          <p><strong>Control Group?</strong> ${k.controlGroup}</p>
+          <p><strong>Why:</strong> ${k.notes}</p>
+        `;
+      } else {
+        els.answerKey.classList.remove('show');
+      }
+    }
+
+    function saveCurrentInputsToState() {
+      const s = currentScenario();
+      state[s.id] = {
+        experimentalType: els.experimentalType.value,
+        specificDesign: els.specificDesign.value,
+        independentVar: els.independentVar.value.trim(),
+        dependentVar: els.dependentVar.value.trim(),
+        randomAssignment: els.randomAssignment.value,
+        controlGroup: els.controlGroup.value,
+        confidence: els.confidence.value,
+        reasoning: els.reasoning.value.trim()
+      };
+      saveState();
+    }
+
+    function renderSummary() {
+      els.summaryTableBody.innerHTML = '';
+      scenarios.forEach(s => {
+        const r = state[s.id] || emptyResponse();
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${s.id}</td>
+          <td>${escapeHtml(r.experimentalType)}</td>
+          <td>${escapeHtml(r.specificDesign)}</td>
+          <td>${escapeHtml(r.independentVar)}</td>
+          <td>${escapeHtml(r.dependentVar)}</td>
+          <td>${escapeHtml(r.randomAssignment)}</td>
+          <td>${escapeHtml(r.controlGroup)}</td>
+        `;
+        els.summaryTableBody.appendChild(tr);
+      });
+    }
+
+    function escapeHtml(str='') {
+      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function checkCompletion() {
+      saveCurrentInputsToState();
+      const r = state[currentScenario().id];
+      const missing = [];
+      ['experimentalType','specificDesign','independentVar','dependentVar','randomAssignment','controlGroup'].forEach(k => {
+        if (!(r[k] || '').trim()) missing.push(k);
+      });
+      if (missing.length === 0) {
+        showStatus('Nice — all core worksheet fields are completed for this scenario.', 'ok');
+      } else {
+        showStatus('Still missing: ' + missing.join(', '), 'warn');
+      }
+    }
+
+    function renderAll() {
+      renderScenarioList();
+      renderWorkPanel();
+      renderSummary();
+    }
+
+    // Event bindings
+    els.saveScenario.addEventListener('click', () => {
+      saveCurrentInputsToState();
+      showStatus('Scenario saved locally on this device.', 'ok');
+      renderScenarioList();
+    });
+
+    els.prevScenario.addEventListener('click', () => {
+      saveCurrentInputsToState();
+      currentIndex = Math.max(0, currentIndex - 1);
+      renderAll();
+    });
+
+    els.nextScenario.addEventListener('click', () => {
+      saveCurrentInputsToState();
+      currentIndex = Math.min(scenarios.length - 1, currentIndex + 1);
+      renderAll();
+    });
+
+    els.checkCompletion.addEventListener('click', checkCompletion);
+
+    els.toggleTeacherMode.addEventListener('click', () => {
+      teacherMode = !teacherMode;
+      els.toggleTeacherMode.textContent = teacherMode ? 'Hide Answer Key (Teacher Mode)' : 'Show Answer Key (Teacher Mode)';
+      renderWorkPanel();
+    });
+
+    els.resetCurrent.addEventListener('click', () => {
+      const s = currentScenario();
+      state[s.id] = emptyResponse();
+      saveState();
+      renderAll();
+      showStatus(`Reset ${s.title}.`, 'ok');
+    });
+
+    els.resetAll.addEventListener('click', () => {
+      if (!confirm('Reset all scenarios? This clears all saved responses in this browser.')) return;
+      scenarios.forEach(s => state[s.id] = emptyResponse());
+      saveState();
+      renderAll();
+      showStatus('All scenarios reset.', 'ok');
+    });
+
+    els.exportJSON.addEventListener('click', () => {
+      saveCurrentInputsToState();
+      const payload = {
+        activity: 'Experimental Design Scenarios Interactive',
+        exportedAt: new Date().toISOString(),
+        responses: scenarios.map(s => ({ scenarioId: s.id, title: s.title, ...state[s.id] }))
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'experimental_design_scenarios_responses.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Autosave on input change
+    ['experimentalType','specificDesign','independentVar','dependentVar','randomAssignment','controlGroup','confidence','reasoning']
+      .forEach(id => {
+        els[id].addEventListener('change', saveCurrentInputsToState);
+        if (els[id].tagName === 'TEXTAREA') {
+          els[id].addEventListener('blur', saveCurrentInputsToState);
+        }
+      });
+
+    renderAll();
+  </script>
+</body>
+</html>
