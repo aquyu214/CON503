@@ -248,16 +248,9 @@
           <div>
             <label for="specificDesign">Specific Design</label>
             <select id="specificDesign">
-              <option value="">-- Select --</option>
-              <option>Randomized block design</option>
-              <option>Posttest-only control group design</option>
-              <option>Pretest-posttest control group design</option>
-              <option>Nonequivalent control group pretest-posttest design</option>
-              <option>One-group pretest-posttest design</option>
-              <option>One-shot case study</option>
-              <option>Matched-pairs randomized design</option>
-              <option>Other / explain in notes</option>
+              <option value="">-- Select Experimental Type First --</option>
             </select>
+            <div class="helper" id="specificDesignHelper">Specific design options will update based on the experimental type you choose.</div>
           </div>
         </div>
 
@@ -349,11 +342,40 @@
   </div>
 
   <script>
+    const DESIGN_OPTIONS = {
+      'True experiment': [
+        'Completely randomized design',
+        'Randomized block design',
+        'Matched pairs design',
+        'Factorial design',
+        'Other / explain in notes'
+      ],
+      'Quasi-experiment': [
+        'Nonequivalent group design',
+        'Interrupted time series design',
+        'Regression discontinuity design',
+        'Other / explain in notes'
+      ],
+      'Pre-experiment': [
+        'One-shot case study',
+        'One-group pretest-posttest',
+        'Static group comparison',
+        'Other / explain in notes'
+      ]
+    };
+
     const scenarios = [
       {
         id: 1,
         title: 'Scenario 1',
-        text: `A researcher wants to study how break frequency affects worker productivity in a construction firm. Since the type of work may influence how break schedules impact productivity, workers are first grouped based on job type:\n• Skilled Laborers (e.g., carpenters, electricians)\n• Heavy Equipment Operators\nWithin each job type, workers are then randomly assigned to one of three break schedules:\n• Group A: 15-minute breaks every 2 hours\n• Group B: 30-minute breaks every 4 hours\n• Group C: No scheduled breaks\nResearchers compare productivity outcomes across groups.`,
+        text: `A researcher wants to study how break frequency affects worker productivity in a construction firm. Since the type of work may influence how break schedules impact productivity, workers are first grouped based on job type:
+• Skilled Laborers (e.g., carpenters, electricians)
+• Heavy Equipment Operators
+Within each job type, workers are then randomly assigned to one of three break schedules:
+• Group A: 15-minute breaks every 2 hours
+• Group B: 30-minute breaks every 4 hours
+• Group C: No scheduled breaks
+Researchers compare productivity outcomes across groups.`,
         key: {
           experimentalType: 'True experiment',
           specificDesign: 'Randomized block design',
@@ -384,7 +406,7 @@
         text: `A construction company implements a new leadership training program for site supervisors aimed at improving safety culture and compliance. The company selects two similar construction sites with ongoing projects: at one site, supervisors receive the leadership training, while at the other site, they do not. Before the training, data on safety violation rates, near-miss reports, and worker perception of safety culture are collected at both sites. After a three-month period, the same data are collected again to assess the impact of the training.`,
         key: {
           experimentalType: 'Quasi-experiment',
-          specificDesign: 'Nonequivalent control group pretest-posttest design',
+          specificDesign: 'Nonequivalent group design',
           independentVar: 'Leadership training for site supervisors',
           dependentVar: 'Safety violation rates; near-miss reports; worker perception of safety culture',
           randomAssignment: 'No',
@@ -398,7 +420,7 @@
         text: `A construction company wants to test whether a new type of safety boot reduces worker fatigue compared to standard boots. To control for individual differences, each worker is paired with another worker of similar physical condition, workload, and experience level. Within each pair, one worker is randomly assigned to wear the new safety boots, while the other wears the standard boots. After a full work shift, researchers measure fatigue levels in both groups and compare the results within each matched pair.`,
         key: {
           experimentalType: 'True experiment',
-          specificDesign: 'Matched-pairs randomized design',
+          specificDesign: 'Matched pairs design',
           independentVar: 'Type of safety boot (new vs standard)',
           dependentVar: 'Worker fatigue level',
           randomAssignment: 'Yes',
@@ -439,7 +461,8 @@
       checkAnswersBtn: document.getElementById('checkAnswersBtn'),
       answerReview: document.getElementById('answerReview'),
       scoreBox: document.getElementById('scoreBox'),
-      answerReviewContent: document.getElementById('answerReviewContent')
+      answerReviewContent: document.getElementById('answerReviewContent'),
+      specificDesignHelper: document.getElementById('specificDesignHelper')
     };
 
     function emptyResponse() {
@@ -523,7 +546,7 @@
       els.scenarioHeader.innerHTML = `${s.title} <span class="completion-chip" id="completionChipInner">Core fields complete: ${fieldFilledCount(r)}/6${r.savedToSummary ? ' • Saved to summary' : ''}</span>`;
       els.scenarioText.textContent = s.text;
       els.experimentalType.value = r.experimentalType || '';
-      els.specificDesign.value = r.specificDesign || '';
+      updateSpecificDesignOptions(r.experimentalType || '', r.specificDesign || '');
       els.independentVar.value = r.independentVar || '';
       els.dependentVar.value = r.dependentVar || '';
       els.randomAssignment.value = r.randomAssignment || '';
@@ -532,6 +555,41 @@
       els.reasoning.value = r.reasoning || '';
       els.scenarioSelect.value = String(currentIndex);
       updateAnswerReviewVisibility();
+    }
+
+    function updateSpecificDesignOptions(experimentalType, selectedValue = '') {
+      const options = DESIGN_OPTIONS[experimentalType] || [];
+      els.specificDesign.innerHTML = '';
+
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = experimentalType ? '-- Select --' : '-- Select Experimental Type First --';
+      els.specificDesign.appendChild(placeholder);
+
+      options.forEach(text => {
+        const opt = document.createElement('option');
+        opt.value = text;
+        opt.textContent = text;
+        els.specificDesign.appendChild(opt);
+      });
+
+      if (selectedValue && options.includes(selectedValue)) {
+        els.specificDesign.value = selectedValue;
+      } else {
+        els.specificDesign.value = '';
+      }
+
+      if (!experimentalType) {
+        els.specificDesign.disabled = true;
+        if (els.specificDesignHelper) {
+          els.specificDesignHelper.textContent = 'Select an experimental type first to see the matching specific design options.';
+        }
+      } else {
+        els.specificDesign.disabled = false;
+        if (els.specificDesignHelper) {
+          els.specificDesignHelper.textContent = `Showing specific designs for ${experimentalType}.`;
+        }
+      }
     }
 
     function saveCurrentInputsToState(markSaved=false) {
@@ -698,7 +756,8 @@
         ];
         lines.push(row.map(csvEscape).join(','));
       });
-      const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([lines.join('
+')], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -710,7 +769,8 @@
 
     function csvEscape(value) {
       const str = String(value ?? '');
-      if (/[,"\n]/.test(str)) return '"' + str.replace(/"/g, '""') + '"';
+      if (/[,"
+]/.test(str)) return '"' + str.replace(/"/g, '""') + '"';
       return str;
     }
 
@@ -749,6 +809,9 @@
       .forEach(id => {
         const el = document.getElementById(id);
         el.addEventListener('change', () => {
+          if (id === 'experimentalType') {
+            updateSpecificDesignOptions(el.value, '');
+          }
           saveCurrentInputsToState(false);
           renderWorkPanel();
         });
