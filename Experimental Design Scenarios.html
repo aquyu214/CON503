@@ -12,7 +12,6 @@
       --muted: #6b7280;
       --line: #e5e7eb;
       --accent: #1d4ed8;
-      --accent-soft: #dbeafe;
       --ok: #166534;
       --ok-bg: #dcfce7;
       --warn: #92400e;
@@ -21,185 +20,48 @@
       --danger-bg: #fee2e2;
     }
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      line-height: 1.45;
-    }
-    .wrap {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .header {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--text); background: var(--bg); line-height: 1.45; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .header, .panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+    .header { margin-bottom: 16px; }
     h1 { margin: 0 0 6px 0; font-size: 1.5rem; }
     .sub { color: var(--muted); margin: 0; }
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
-    }
-    button {
-      border: 1px solid var(--line);
-      background: white;
-      color: var(--text);
-      border-radius: 10px;
-      padding: 8px 12px;
-      cursor: pointer;
-      font-size: 0.95rem;
-    }
-    button.primary {
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
-    }
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 16px;
-    }
-    .section-title {
-      font-weight: 700;
-      margin: 14px 0 8px;
-      font-size: 1rem;
-    }
-    .scenario-controls {
-      display: grid;
-      grid-template-columns: 1.1fr auto auto auto;
-      gap: 10px;
-      align-items: end;
-      margin-bottom: 12px;
-    }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    button { border: 1px solid var(--line); background: white; color: var(--text); border-radius: 10px; padding: 8px 12px; cursor: pointer; font-size: 0.95rem; }
+    button.primary { background: var(--accent); color: white; border-color: var(--accent); }
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .section-title { font-weight: 700; margin: 10px 0 8px; font-size: 1rem; }
+    .scenario-controls { display: grid; grid-template-columns: 1.1fr auto auto auto; gap: 10px; align-items: end; margin-bottom: 12px; }
     label { display: block; font-weight: 600; margin-bottom: 6px; }
-    select, input[type="text"], textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 9px 10px;
-      font-size: 0.95rem;
-      background: white;
-    }
+    select, textarea { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 9px 10px; font-size: 0.95rem; background: white; }
     textarea { min-height: 78px; resize: vertical; }
-    .scenario-text {
-      white-space: pre-wrap;
-      background: #fbfcfe;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 14px;
-      min-height: 180px;
-      font-size: 1rem;
-    }
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .row3 {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .helper { color: var(--muted); font-size: 0.85rem; margin-top: 3px; }
+    .scenario-text { white-space: pre-wrap; background: #fbfcfe; border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 14px; min-height: 180px; font-size: 1rem; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .helper { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
     .footer-note { color: var(--muted); font-size: 0.9rem; margin-top: 10px; }
-    .status {
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      background: #fff;
-      display: none;
-    }
+    .status { margin-top: 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); display: none; }
     .status.show { display: block; }
     .status.ok { background: var(--ok-bg); color: var(--ok); border-color: #bbf7d0; }
     .status.warn { background: var(--warn-bg); color: var(--warn); border-color: #fde68a; }
     .status.danger { background: var(--danger-bg); color: var(--danger); border-color: #fecaca; }
-    .sticky-actions {
-      position: sticky;
-      bottom: 10px;
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-      flex-wrap: wrap;
-      background: rgba(247,248,251,0.85);
-      backdrop-filter: blur(4px);
-      padding-top: 8px;
-    }
-    .mini-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.92rem;
-      margin-top: 6px;
-    }
-    .mini-table th, .mini-table td {
-      border: 1px solid var(--line);
-      padding: 8px;
-      vertical-align: top;
-    }
+    .sticky-actions { position: sticky; bottom: 10px; display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; background: rgba(247,248,251,0.85); backdrop-filter: blur(4px); padding-top: 8px; }
+    .mini-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin-top: 6px; }
+    .mini-table th, .mini-table td { border: 1px solid var(--line); padding: 8px; vertical-align: top; }
     .mini-table th { background: #f9fafb; text-align: left; }
     .summary-cell-empty { color: #9ca3af; font-style: italic; }
-    .completion-chip {
-      display: inline-block;
-      margin-left: 8px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      font-size: 0.8rem;
-      background: #f9fafb;
-    }
-    .answer-review {
-      margin-top: 14px;
-      border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      padding: 12px;
-      background: #f8fafc;
-      display: none;
-    }
+    .completion-chip { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); font-size: 0.8rem; background: #f9fafb; }
+    .answer-review { margin-top: 14px; border: 1px solid #cbd5e1; border-radius: 12px; padding: 12px; background: #f8fafc; display: none; }
     .answer-review.show { display: block; }
     .answer-review h4 { margin: 0 0 8px; }
-    .score-box {
-      margin-bottom: 10px;
-      padding: 10px;
-      border-radius: 10px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1e40af;
-    }
-    .answer-list {
-      margin: 0;
-      padding-left: 18px;
-    }
+    .score-box { margin-bottom: 10px; padding: 10px; border-radius: 10px; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+    .answer-list { margin: 0; padding-left: 18px; }
     .answer-list li { margin-bottom: 8px; }
-    details summary {
-      cursor: pointer;
-      font-weight: 700;
-      margin-top: 14px;
-    }
+    details summary { cursor: pointer; font-weight: 700; margin-top: 14px; }
     .checklist { margin: 8px 0 0; padding-left: 20px; }
     @media (max-width: 900px) {
-      .row, .row3 { grid-template-columns: 1fr; }
-      .scenario-controls { grid-template-columns: 1fr; }
+      .row, .row3, .scenario-controls { grid-template-columns: 1fr; }
       .sticky-actions { position: static; }
     }
   </style>
@@ -215,13 +77,12 @@
         <button id="exportCSV">Export Responses (Excel .csv)</button>
         <button id="checkAnswersBtn" class="primary">Check Answers (after all 4 scenarios)</button>
       </div>
-      <p class="footer-note">Student responses are saved locally in this browser (localStorage). Use Export to save a copy you can open in Excel.</p>
+      <p class="footer-note">Responses are saved locally in this browser. Use Export to save an Excel-compatible CSV file.</p>
     </div>
 
     <div class="grid">
       <div class="panel" id="workPanel">
         <div class="section-title">Work on a Scenario</div>
-
         <div class="scenario-controls">
           <div>
             <label for="scenarioSelect">Choose Scenario</label>
@@ -232,7 +93,7 @@
           <button id="nextScenario">Next →</button>
         </div>
 
-        <div id="scenarioHeader" class="section-title">Scenario 1 <span class="completion-chip" id="completionChip">Core fields complete: 0/6</span></div>
+        <div id="scenarioHeader" class="section-title">Scenario 1 <span class="completion-chip">Core fields complete: 0/6</span></div>
         <div id="scenarioText" class="scenario-text"></div>
 
         <div class="row">
@@ -247,7 +108,7 @@
           </div>
           <div>
             <label for="specificDesign">Specific Design</label>
-            <select id="specificDesign">
+            <select id="specificDesign" disabled>
               <option value="">-- Select Experimental Type First --</option>
             </select>
             <div class="helper" id="specificDesignHelper">Specific design options will update based on the experimental type you choose.</div>
@@ -326,7 +187,7 @@
           <h4>Worksheet Answer Review (Unlocked)</h4>
           <div class="score-box" id="scoreBox"></div>
           <div id="answerReviewContent"></div>
-          <p class="helper">Note: Exact variable wording can vary. Treat IV/DV wording as concept checks, and use instructor discussion for acceptable alternatives.</p>
+          <p class="helper">IV/DV wording can vary. Treat IV/DV as concept checks; use instructor discussion for acceptable alternatives.</p>
         </div>
 
         <details>
@@ -368,14 +229,7 @@
       {
         id: 1,
         title: 'Scenario 1',
-        text: `A researcher wants to study how break frequency affects worker productivity in a construction firm. Since the type of work may influence how break schedules impact productivity, workers are first grouped based on job type:
-• Skilled Laborers (e.g., carpenters, electricians)
-• Heavy Equipment Operators
-Within each job type, workers are then randomly assigned to one of three break schedules:
-• Group A: 15-minute breaks every 2 hours
-• Group B: 30-minute breaks every 4 hours
-• Group C: No scheduled breaks
-Researchers compare productivity outcomes across groups.`,
+        text: `A researcher wants to study how break frequency affects worker productivity in a construction firm. Since the type of work may influence how break schedules impact productivity, workers are first grouped based on job type:\n• Skilled Laborers (e.g., carpenters, electricians)\n• Heavy Equipment Operators\nWithin each job type, workers are then randomly assigned to one of three break schedules:\n• Group A: 15-minute breaks every 2 hours\n• Group B: 30-minute breaks every 4 hours\n• Group C: No scheduled breaks\nResearchers compare productivity outcomes across groups.`,
         key: {
           experimentalType: 'True experiment',
           specificDesign: 'Randomized block design',
@@ -430,7 +284,7 @@ Researchers compare productivity outcomes across groups.`,
       }
     ];
 
-    const STORAGE_KEY = 'exp_design_scenarios_v2';
+    const STORAGE_KEY = 'exp_design_scenarios_v3';
     let currentIndex = 0;
     let answerReviewUnlocked = false;
     let state = loadState();
@@ -442,9 +296,9 @@ Researchers compare productivity outcomes across groups.`,
       nextScenario: document.getElementById('nextScenario'),
       scenarioHeader: document.getElementById('scenarioHeader'),
       scenarioText: document.getElementById('scenarioText'),
-      completionChip: document.getElementById('completionChip'),
       experimentalType: document.getElementById('experimentalType'),
       specificDesign: document.getElementById('specificDesign'),
+      specificDesignHelper: document.getElementById('specificDesignHelper'),
       independentVar: document.getElementById('independentVar'),
       dependentVar: document.getElementById('dependentVar'),
       randomAssignment: document.getElementById('randomAssignment'),
@@ -461,42 +315,14 @@ Researchers compare productivity outcomes across groups.`,
       checkAnswersBtn: document.getElementById('checkAnswersBtn'),
       answerReview: document.getElementById('answerReview'),
       scoreBox: document.getElementById('scoreBox'),
-      answerReviewContent: document.getElementById('answerReviewContent'),
-      specificDesignHelper: document.getElementById('specificDesignHelper')
+      answerReviewContent: document.getElementById('answerReviewContent')
     };
 
     function emptyResponse() {
       return {
-        experimentalType: '',
-        specificDesign: '',
-        independentVar: '',
-        dependentVar: '',
-        randomAssignment: '',
-        controlGroup: '',
-        confidence: '',
-        reasoning: '',
-        savedToSummary: false
+        experimentalType: '', specificDesign: '', independentVar: '', dependentVar: '',
+        randomAssignment: '', controlGroup: '', confidence: '', reasoning: '', savedToSummary: false
       };
-    }
-
-    function normalize(text='') {
-      return text.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-    }
-
-    function fieldFilledCount(r) {
-      const keys = ['experimentalType','specificDesign','independentVar','dependentVar','randomAssignment','controlGroup'];
-      return keys.filter(k => (r[k] || '').trim() !== '').length;
-    }
-
-    function isCoreComplete(r) {
-      return fieldFilledCount(r) === 6;
-    }
-
-    function allScenariosCompleteAndSaved() {
-      return scenarios.every(s => {
-        const r = state[s.id];
-        return r && isCoreComplete(r) && r.savedToSummary;
-      });
     }
 
     function loadState() {
@@ -506,18 +332,14 @@ Researchers compare productivity outcomes across groups.`,
       if (!raw) return initial;
       try {
         const parsed = JSON.parse(raw);
-        scenarios.forEach(s => {
-          initial[s.id] = { ...emptyResponse(), ...(parsed[s.id] || {}) };
-        });
+        scenarios.forEach(s => { initial[s.id] = { ...emptyResponse(), ...(parsed[s.id] || {}) }; });
         return initial;
       } catch {
         return initial;
       }
     }
 
-    function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
+    function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
     function showStatus(msg, type='ok') {
       els.statusBox.textContent = msg;
@@ -527,23 +349,67 @@ Researchers compare productivity outcomes across groups.`,
 
     function currentScenario() { return scenarios[currentIndex]; }
 
+    function fieldFilledCount(r) {
+      const keys = ['experimentalType','specificDesign','independentVar','dependentVar','randomAssignment','controlGroup'];
+      return keys.filter(k => (r[k] || '').trim() !== '').length;
+    }
+
+    function isCoreComplete(r) { return fieldFilledCount(r) === 6; }
+
+    function allScenariosCompleteAndSaved() {
+      return scenarios.every(s => {
+        const r = state[s.id];
+        return r && isCoreComplete(r) && r.savedToSummary;
+      });
+    }
+
     function populateScenarioSelect() {
       els.scenarioSelect.innerHTML = '';
       scenarios.forEach((s, idx) => {
         const r = state[s.id] || emptyResponse();
         const opt = document.createElement('option');
-        const suffix = r.savedToSummary ? ' ✓ Saved' : '';
         opt.value = idx;
-        opt.textContent = `${s.title}${suffix}`;
+        opt.textContent = `${s.title}${r.savedToSummary ? ' ✓ Saved' : ''}`;
         els.scenarioSelect.appendChild(opt);
       });
       els.scenarioSelect.value = String(currentIndex);
     }
 
+    function updateSpecificDesignOptions(experimentalType, selectedValue='') {
+      const options = DESIGN_OPTIONS[experimentalType] || [];
+      els.specificDesign.innerHTML = '';
+
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = experimentalType ? '-- Select --' : '-- Select Experimental Type First --';
+      els.specificDesign.appendChild(placeholder);
+
+      options.forEach(txt => {
+        const opt = document.createElement('option');
+        opt.value = txt;
+        opt.textContent = txt;
+        els.specificDesign.appendChild(opt);
+      });
+
+      if (selectedValue && options.includes(selectedValue)) {
+        els.specificDesign.value = selectedValue;
+      } else {
+        els.specificDesign.value = '';
+      }
+
+      if (!experimentalType) {
+        els.specificDesign.disabled = true;
+        els.specificDesignHelper.textContent = 'Select an experimental type first to see the matching specific design options.';
+      } else {
+        els.specificDesign.disabled = false;
+        els.specificDesignHelper.textContent = `Showing specific designs for ${experimentalType}.`;
+      }
+    }
+
     function renderWorkPanel() {
       const s = currentScenario();
       const r = state[s.id] || emptyResponse();
-      els.scenarioHeader.innerHTML = `${s.title} <span class="completion-chip" id="completionChipInner">Core fields complete: ${fieldFilledCount(r)}/6${r.savedToSummary ? ' • Saved to summary' : ''}</span>`;
+      els.scenarioHeader.innerHTML = `${s.title} <span class="completion-chip">Core fields complete: ${fieldFilledCount(r)}/6${r.savedToSummary ? ' • Saved to summary' : ''}</span>`;
       els.scenarioText.textContent = s.text;
       els.experimentalType.value = r.experimentalType || '';
       updateSpecificDesignOptions(r.experimentalType || '', r.specificDesign || '');
@@ -557,44 +423,9 @@ Researchers compare productivity outcomes across groups.`,
       updateAnswerReviewVisibility();
     }
 
-    function updateSpecificDesignOptions(experimentalType, selectedValue = '') {
-      const options = DESIGN_OPTIONS[experimentalType] || [];
-      els.specificDesign.innerHTML = '';
-
-      const placeholder = document.createElement('option');
-      placeholder.value = '';
-      placeholder.textContent = experimentalType ? '-- Select --' : '-- Select Experimental Type First --';
-      els.specificDesign.appendChild(placeholder);
-
-      options.forEach(text => {
-        const opt = document.createElement('option');
-        opt.value = text;
-        opt.textContent = text;
-        els.specificDesign.appendChild(opt);
-      });
-
-      if (selectedValue && options.includes(selectedValue)) {
-        els.specificDesign.value = selectedValue;
-      } else {
-        els.specificDesign.value = '';
-      }
-
-      if (!experimentalType) {
-        els.specificDesign.disabled = true;
-        if (els.specificDesignHelper) {
-          els.specificDesignHelper.textContent = 'Select an experimental type first to see the matching specific design options.';
-        }
-      } else {
-        els.specificDesign.disabled = false;
-        if (els.specificDesignHelper) {
-          els.specificDesignHelper.textContent = `Showing specific designs for ${experimentalType}.`;
-        }
-      }
-    }
-
     function saveCurrentInputsToState(markSaved=false) {
       const s = currentScenario();
-      const previousSavedFlag = state[s.id]?.savedToSummary || false;
+      const prevSaved = state[s.id]?.savedToSummary || false;
       state[s.id] = {
         experimentalType: els.experimentalType.value,
         specificDesign: els.specificDesign.value,
@@ -604,9 +435,18 @@ Researchers compare productivity outcomes across groups.`,
         controlGroup: els.controlGroup.value,
         confidence: els.confidence.value,
         reasoning: els.reasoning.value.trim(),
-        savedToSummary: markSaved ? true : previousSavedFlag
+        savedToSummary: markSaved ? true : prevSaved
       };
       saveState();
+    }
+
+    function escapeHtml(str='') {
+      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function cell(value) {
+      const v = (value || '').trim();
+      return v ? escapeHtml(v) : '<span class="summary-cell-empty">—</span>';
     }
 
     function renderSummary() {
@@ -614,9 +454,8 @@ Researchers compare productivity outcomes across groups.`,
       scenarios.forEach(s => {
         const r = state[s.id] || emptyResponse();
         const tr = document.createElement('tr');
-        const notSaved = !r.savedToSummary;
         tr.innerHTML = `
-          <td>${s.title}${notSaved ? ' <span class="summary-cell-empty">(not saved)</span>' : ''}</td>
+          <td>${s.title}${!r.savedToSummary ? ' <span class="summary-cell-empty">(not saved)</span>' : ''}</td>
           <td>${cell(r.savedToSummary ? r.experimentalType : '')}</td>
           <td>${cell(r.savedToSummary ? r.specificDesign : '')}</td>
           <td>${cell(r.savedToSummary ? r.independentVar : '')}</td>
@@ -628,16 +467,6 @@ Researchers compare productivity outcomes across groups.`,
       });
       populateScenarioSelect();
       updateAnswerReviewVisibility();
-    }
-
-    function cell(value) {
-      const v = (value || '').trim();
-      if (!v) return '<span class="summary-cell-empty">—</span>';
-      return escapeHtml(v);
-    }
-
-    function escapeHtml(str='') {
-      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
     }
 
     function checkCurrentCompletion() {
@@ -673,9 +502,6 @@ Researchers compare productivity outcomes across groups.`,
     function updateAnswerReviewVisibility() {
       const unlocked = answerReviewUnlocked && allScenariosCompleteAndSaved();
       els.answerReview.classList.toggle('show', unlocked);
-      if (!allScenariosCompleteAndSaved()) {
-        els.checkAnswersBtn.disabled = false;
-      }
     }
 
     function compareAgainstKey() {
@@ -684,13 +510,10 @@ Researchers compare productivity outcomes across groups.`,
         return;
       }
       answerReviewUnlocked = true;
-
-      let exactChecks = 0;
-      let exactCorrect = 0;
+      let exactChecks = 0, exactCorrect = 0;
       const rows = [];
       scenarios.forEach(s => {
-        const r = state[s.id];
-        const k = s.key;
+        const r = state[s.id], k = s.key;
         const checks = [
           ['Experimental Type', r.experimentalType, k.experimentalType, r.experimentalType === k.experimentalType],
           ['Specific Design', r.specificDesign, k.specificDesign, r.specificDesign === k.specificDesign],
@@ -699,31 +522,24 @@ Researchers compare productivity outcomes across groups.`,
         ];
         exactChecks += checks.length;
         exactCorrect += checks.filter(c => c[3]).length;
-        rows.push({ scenario: s, response: r, checks });
+        rows.push({ s, r, checks });
       });
-
-      els.scoreBox.textContent = `Exact-match score (design type / specific design / random assignment / control group): ${exactCorrect} / ${exactChecks}. IV and DV wording are reviewed conceptually.`;
-
-      els.answerReviewContent.innerHTML = rows.map(({scenario, response, checks}) => {
-        const checksHtml = checks.map(([label, student, key, ok]) => `
-          <li><strong>${label}:</strong> ${ok ? '✅' : '❌'} Your answer: <em>${escapeHtml(student || '—')}</em> | Suggested key: <em>${escapeHtml(key)}</em></li>
-        `).join('');
-
+      els.scoreBox.textContent = `Exact-match score (experimental type / specific design / random assignment / control group): ${exactCorrect} / ${exactChecks}. IV and DV wording are reviewed conceptually.`;
+      els.answerReviewContent.innerHTML = rows.map(({s, r, checks}) => {
+        const checksHtml = checks.map(([label, student, key, ok]) => `<li><strong>${label}:</strong> ${ok ? '✅' : '❌'} Your answer: <em>${escapeHtml(student || '—')}</em> | Suggested key: <em>${escapeHtml(key)}</em></li>`).join('');
         return `
           <div style="margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid #e5e7eb;">
-            <div style="font-weight:700; margin-bottom:6px;">${escapeHtml(scenario.title)}</div>
+            <div style="font-weight:700; margin-bottom:6px;">${escapeHtml(s.title)}</div>
             <ul class="answer-list">${checksHtml}</ul>
-            <div style="margin-top:6px;"><strong>Your IV(s):</strong> ${escapeHtml(response.independentVar || '—')}</div>
-            <div><strong>Suggested IV(s):</strong> ${escapeHtml(scenario.key.independentVar)}</div>
-            <div style="margin-top:4px;"><strong>Your DV(s):</strong> ${escapeHtml(response.dependentVar || '—')}</div>
-            <div><strong>Suggested DV(s):</strong> ${escapeHtml(scenario.key.dependentVar)}</div>
-            <div style="margin-top:6px;"><strong>Why (suggested reasoning):</strong> ${escapeHtml(scenario.key.notes)}</div>
-          </div>
-        `;
+            <div style="margin-top:6px;"><strong>Your IV(s):</strong> ${escapeHtml(r.independentVar || '—')}</div>
+            <div><strong>Suggested IV(s):</strong> ${escapeHtml(s.key.independentVar)}</div>
+            <div style="margin-top:4px;"><strong>Your DV(s):</strong> ${escapeHtml(r.dependentVar || '—')}</div>
+            <div><strong>Suggested DV(s):</strong> ${escapeHtml(s.key.dependentVar)}</div>
+            <div style="margin-top:6px;"><strong>Suggested reasoning:</strong> ${escapeHtml(s.key.notes)}</div>
+          </div>`;
       }).join('');
-
       els.answerReview.classList.add('show');
-      showStatus('Answer review unlocked. Great job completing the full worksheet first!', 'ok');
+      showStatus('Answer review unlocked. Nice work completing all 4 scenarios first.', 'ok');
     }
 
     function goToScenario(index) {
@@ -733,31 +549,23 @@ Researchers compare productivity outcomes across groups.`,
       populateScenarioSelect();
     }
 
+    function csvEscape(value) {
+      const str = String(value ?? '');
+      return /[,"]|\n/.test(str) ? '"' + str.replace(/"/g, '""') + '"' : str;
+    }
+
     function exportCSV() {
       saveCurrentInputsToState(false);
-      const headers = [
-        'Scenario ID','Scenario Title','Saved to Summary','Experimental Type','Specific Design','Independent Variable(s)','Dependent Variable(s)','Random Assignment','Control Group','Confidence','Reasoning/Notes'
-      ];
+      const headers = ['Scenario ID','Scenario Title','Saved to Summary','Experimental Type','Specific Design','Independent Variable(s)','Dependent Variable(s)','Random Assignment','Control Group','Confidence','Reasoning/Notes'];
       const lines = [headers.map(csvEscape).join(',')];
       scenarios.forEach(s => {
         const r = state[s.id] || emptyResponse();
-        const row = [
-          s.id,
-          s.title,
-          r.savedToSummary ? 'Yes' : 'No',
-          r.experimentalType,
-          r.specificDesign,
-          r.independentVar,
-          r.dependentVar,
-          r.randomAssignment,
-          r.controlGroup,
-          r.confidence,
-          r.reasoning
-        ];
-        lines.push(row.map(csvEscape).join(','));
+        lines.push([
+          s.id, s.title, r.savedToSummary ? 'Yes' : 'No', r.experimentalType, r.specificDesign, r.independentVar, r.dependentVar,
+          r.randomAssignment, r.controlGroup, r.confidence, r.reasoning
+        ].map(csvEscape).join(','));
       });
-      const blob = new Blob([lines.join('
-')], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -767,17 +575,8 @@ Researchers compare productivity outcomes across groups.`,
       showStatus('Exported Excel-compatible CSV file.', 'ok');
     }
 
-    function csvEscape(value) {
-      const str = String(value ?? '');
-      if (/[,"
-]/.test(str)) return '"' + str.replace(/"/g, '""') + '"';
-      return str;
-    }
-
-    // Event handlers
-    document.getElementById('loadScenario').addEventListener('click', () => {
-      goToScenario(Number(els.scenarioSelect.value));
-    });
+    // Controls
+    els.loadScenario.addEventListener('click', () => goToScenario(Number(els.scenarioSelect.value)));
     els.scenarioSelect.addEventListener('change', () => goToScenario(Number(els.scenarioSelect.value)));
     els.prevScenario.addEventListener('click', () => goToScenario(currentIndex - 1));
     els.nextScenario.addEventListener('click', () => goToScenario(currentIndex + 1));
@@ -796,7 +595,7 @@ Researchers compare productivity outcomes across groups.`,
     });
 
     els.resetAll.addEventListener('click', () => {
-      if (!confirm('Reset all scenarios? This clears all responses saved in this browser.')) return;
+      if (!confirm('Reset all scenarios? This clears all responses in this browser.')) return;
       scenarios.forEach(s => state[s.id] = emptyResponse());
       answerReviewUnlocked = false;
       saveState();
@@ -805,23 +604,23 @@ Researchers compare productivity outcomes across groups.`,
       showStatus('All scenarios reset.', 'ok');
     });
 
-    ['experimentalType','specificDesign','independentVar','dependentVar','randomAssignment','controlGroup','confidence','reasoning']
-      .forEach(id => {
-        const el = document.getElementById(id);
-        el.addEventListener('change', () => {
-          if (id === 'experimentalType') {
-            updateSpecificDesignOptions(el.value, '');
-          }
+    ['experimentalType','specificDesign','independentVar','dependentVar','randomAssignment','controlGroup','confidence','reasoning'].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('change', () => {
+        if (id === 'experimentalType') {
+          const existingSpecific = els.specificDesign.value;
+          updateSpecificDesignOptions(el.value, existingSpecific);
+        }
+        saveCurrentInputsToState(false);
+        renderWorkPanel();
+      });
+      if (el.tagName === 'TEXTAREA') {
+        el.addEventListener('blur', () => {
           saveCurrentInputsToState(false);
           renderWorkPanel();
         });
-        if (el.tagName === 'TEXTAREA') {
-          el.addEventListener('blur', () => {
-            saveCurrentInputsToState(false);
-            renderWorkPanel();
-          });
-        }
-      });
+      }
+    });
 
     function init() {
       populateScenarioSelect();
