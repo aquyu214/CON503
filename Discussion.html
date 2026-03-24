@@ -12,7 +12,6 @@
       --muted: #6b7280;
       --border: #d9e2ef;
       --accent: #2563eb;
-      --accent-soft: #eaf2ff;
       --good: #166534;
       --good-bg: #ecfdf3;
       --bad: #991b1b;
@@ -27,584 +26,362 @@
       font-family: Arial, Helvetica, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.5;
     }
 
     .wrap {
-      max-width: 1180px;
+      max-width: 1000px;
       margin: 0 auto;
       padding: 28px 18px 54px;
     }
 
-    .hero, .panel, .tips, .scorebox, .bank {
-      position: sticky;
-      top: 16px;
-      max-height: calc(100vh - 40px);
-      overflow-y: auto;
-    }
-
-    .panel {
-      min-height: 600px; /* slightly taller for better balance */
-    }
-
-    .hero {
-      padding: 28px;
+    .card, .tips, .scorebox {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 20px;
       margin-bottom: 18px;
-      background: linear-gradient(135deg, #eff6ff, #ffffff);
     }
 
-    h1 {
-      margin: 0 0 10px;
-      font-size: 2rem;
-    }
+    h1 { margin: 0 0 10px; }
 
     .subtitle {
-      margin: 0;
       color: var(--muted);
-      max-width: 940px;
+      line-height: 1.6;
+      margin: 0;
     }
 
     .controls {
-      margin-top: 18px;
+      margin-top: 16px;
       display: flex;
+      gap: 10px;
       flex-wrap: wrap;
-      gap: 12px;
     }
 
     button {
       border: none;
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 0.98rem;
+      border-radius: 10px;
+      padding: 10px 14px;
       cursor: pointer;
-      transition: transform 0.12s ease;
+      font-size: 0.95rem;
     }
 
-    button:hover { transform: translateY(-1px); }
+    .primary {
+      background: var(--accent);
+      color: white;
+    }
 
-    .primary { background: var(--accent); color: white; }
     .secondary {
       background: white;
-      color: var(--text);
       border: 1px solid var(--border);
-    }
-
-    .scorebox {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      padding: 14px 16px;
-      margin-bottom: 18px;
-    }
-
-    .scorebox strong { font-size: 1.05rem; }
-    .scorebox span { color: var(--muted); }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr; /* equal width for bank and workspace */
-      gap: 18px;
-      align-items: start;
-    }
-
-    .bank, .panel, .tips {
-      padding: 18px;
-    }
-
-    .bank {
-      position: sticky;
-      top: 16px;
-      max-height: calc(100vh - 40px);
-      overflow-y: auto;
-    }
-
-    .bank h2, .panel h2, .tips h2 {
-      margin-top: 0;
-      font-size: 1.15rem;
-    }
-
-    .small-note {
-      color: var(--muted);
-      font-size: 0.93rem;
-      margin-top: -2px;
-      margin-bottom: 12px;
-    }
-
-    .drag-hint {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .cards {
-      display: grid;
-      gap: 12px;
     }
 
     .dropzone {
-      min-height: 520px;
+      min-height: 500px;
       border: 2px dashed var(--border);
-      border-radius: 16px;
-      padding: 12px;
-      background: #fcfdff;
-      transition: border-color 0.15s ease, background 0.15s ease;
-    }
-
-    .dropzone.active {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-    }
-
-    .placeholder {
-      color: var(--muted);
-      font-size: 0.95rem;
-      padding: 8px;
+      border-radius: 14px;
+      padding: 16px;
+      background: #fafcff;
     }
 
     .item {
-      background: #fbfdff;
+      background: white;
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
       cursor: grab;
-      user-select: none;
-      margin-bottom: 10px;
-    }
-
-    .item.dragging {
-      opacity: 0.55;
-      transform: scale(0.98);
+      line-height: 1.75;
+      font-size: 0.98rem;
+      width: 100%;
+      white-space: normal;
+      overflow-wrap: break-word;
     }
 
     .item.correct {
-      background: #f4fff7;
       border: 2px solid #8fd4a6;
+      background: #f4fff7;
     }
 
     .item.incorrect {
-      background: #fff6f6;
       border: 2px solid #f1a6a6;
+      background: #fff6f6;
     }
 
-    .item-header {
+    .item-top {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
       align-items: flex-start;
-    }
-
-    .item-text {
-      font-size: 0.96rem;
-      flex: 1;
+      gap: 12px;
+      margin-bottom: 10px;
     }
 
     .item-label {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 28px;
-      height: 28px;
+      min-width: 30px;
+      height: 30px;
       padding: 0 8px;
       border-radius: 999px;
+      font-weight: bold;
+      color: #2563eb;
       background: #eaf2ff;
       border: 1px solid #cfe0ff;
-      color: #1d4ed8;
-      font-weight: 700;
-      margin-right: 8px;
-      vertical-align: middle;
+      flex-shrink: 0;
     }
 
     .move-controls {
       display: flex;
-      flex-direction: column;
       gap: 6px;
-      margin-left: 8px;
+      flex-shrink: 0;
     }
 
     .move-controls button {
-      padding: 6px 9px;
-      font-size: 0.85rem;
+      padding: 6px 10px;
       border: 1px solid var(--border);
       background: white;
-      color: var(--text);
+      font-size: 0.9rem;
     }
 
-    .item-meta {
-      margin-top: 8px;
-      font-size: 0.88rem;
-      color: var(--muted);
-      display: none;
+    .item-text {
+      display: block;
+      width: 100%;
+      line-height: 1.75;
+      text-align: left;
     }
-
-    .item-meta.show { display: block; }
 
     .feedback {
       margin-top: 12px;
-      padding: 12px;
-      border-radius: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
       display: none;
     }
 
     .feedback.show { display: block; }
+
     .feedback.correct {
       background: var(--good-bg);
       color: var(--good);
       border: 1px solid #b7ebc6;
     }
+
     .feedback.incorrect {
       background: var(--bad-bg);
       color: var(--bad);
       border: 1px solid #f5c2c7;
     }
 
-    .tips { margin-top: 18px; }
-    .tips ul { margin: 10px 0 0 20px; }
-
-    .legend {
-      margin-top: 12px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .pill {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: white;
-    }
-
-    @media (max-width: 980px) {
-      .layout { grid-template-columns: 1fr; }
-      .scorebox {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .bank {
-        position: static;
-        max-height: none;
-      }
+    .tips ul {
+      margin: 0;
+      padding-left: 20px;
+      line-height: 1.7;
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <section class="hero">
-      <h1>Discussion Section Ordering Exercise</h1>
+
+    <div class="card">
+      <h1>Discussion Section Ordering</h1>
       <p class="subtitle">
-        In this exercise, you will work with a discussion section from a study on fatigue among construction workers in high-altitude, hypoxic environments. Your task is to arrange the discussion paragraphs in the most logical order.
-        <br><br>
-        Think about how discussion sections usually flow: major contribution or overall interpretation, discussion of key findings, implications, and then limitations and future research.
+        Arrange the following discussion paragraphs into the most logical order. Focus on how a discussion section typically flows: overall interpretation and contribution, key findings, implications, and limitations/future research.
       </p>
+
       <div class="controls">
-        <button class="primary" onclick="checkAnswers()">Check Answers</button>
+        <button class="primary" onclick="checkAnswers()">Check</button>
         <button class="secondary" onclick="showAnswers()">Show Solution</button>
         <button class="secondary" onclick="resetBoard()">Reset</button>
       </div>
-    </section>
+    </div>
 
     <div class="scorebox">
       <strong id="score">Score: 0 / 5</strong>
-      <span id="status">Drag each paragraph into the discussion order box, then use ↑ ↓ to reorder.</span>
     </div>
 
-    <div class="layout">
-      <section class="bank">
-        <h2>Paragraph Bank</h2>
-        <p class="small-note">Drag each paragraph into the discussion order box.</p>
-        <div class="drag-hint">💡 Drag from here → to the right</div>
-        <div class="cards" id="bank"></div>
-      </section>
-
-      <section class="panel">
-        <h2>Discussion Order</h2>
-        <p class="small-note">Step 1: Drag all paragraphs here → Step 2: Use ↑ ↓ to put them in the best order.</p>
-        <div class="dropzone" id="discussionOrder">
-          <div class="placeholder">Drop all five discussion paragraphs here in the order you think makes the most sense.</div>
-        </div>
-        <div class="feedback" id="orderFeedback"></div>
-      </section>
+    <div class="card">
+      <div class="dropzone" id="zone"></div>
+      <div class="feedback" id="feedback"></div>
     </div>
 
-    <section class="tips">
-      <h2>Quick Reminder</h2>
+    <div class="tips">
       <ul>
-        <li>Discussion sections often begin by interpreting the overall contribution or major findings.</li>
-        <li>They then move into specific findings and what those findings mean.</li>
-        <li>Practical implications often come after interpretation of key findings.</li>
-        <li>Limitations and future research commonly appear near the end.</li>
+        <li>Start with overall contribution or broad interpretation.</li>
+        <li>Then move into specific findings.</li>
+        <li>Then discuss implications.</li>
+        <li>End with limitations and future research.</li>
       </ul>
-      <div class="legend">
-        <div class="pill">Correct position = 1 point</div>
-        <div class="pill">5 paragraphs = 5 points</div>
-      </div>
-    </section>
+    </div>
+
   </div>
 
   <script>
     const items = [
       {
         id: 1,
-        text: 'The objective of this study to assess the factors influencing fatigue in high-altitude construction workers using Bayesian network model represents a significant advancement in occupational health research. The study\'s first major contribution is the introduction of high-altitude exposure time into the study of fatigue in construction workers and the revelation of the combined effects of high-altitude exposure time and factors such as shift conditions, sleep quality and work overload on fatigue. This holistic approach not only highlights the significant role of high-altitude exposure in inducing pre-service fatigue but also enriches the existing literature on construction management by identifying impact factors of fatigue. The second advancement is the development of a model that encapsulates both pre-service and work fatigue, offering a nuanced understanding of how these two forms of fatigue interact, particularly in high-altitude hypoxic conditions. The findings emphasize the compounded effect of pre-service fatigue, duration of high-altitude exposure, and workload on work fatigue, thereby extending the academic discourse on occupational fatigue.',
-        order: 1,
-        why: 'This paragraph gives the overall contribution and broad interpretation of the study, so it works best as the opening of the discussion.'
+        text: "The objective of this study to assess the factors influencing fatigue in high-altitude construction workers using Bayesian network model represents a significant advancement in occupational health research. The study's first major contribution is the introduction of high-altitude exposure time into the study of fatigue in construction workers and the revelation of the combined effects of high-altitude exposure time and factors such as shift conditions, sleep quality and work overload on fatigue. This holistic approach not only highlights the significant role of high-altitude exposure in inducing pre-service fatigue but also enriches the existing literature on construction management by identifying impact factors of fatigue. The second advancement is the development of a model that encapsulates both pre-service and work fatigue, offering a nuanced understanding of how these two forms of fatigue interact, particularly in high-altitude hypoxic conditions. The findings emphasize the compounded effect of pre-service fatigue, duration of high-altitude exposure, and workload on work fatigue, thereby extending the academic discourse on occupational fatigue.",
+        order: 1
       },
       {
         id: 2,
-        text: 'This study found that pre-service fatigue was the most important contributor to work-related fatigue. Pre-service fatigue was also influenced by factors such as shift patterns, sleep quality, task overload and duration of exposure to high altitude, thus pre-service fatigue also played an important role as a mediator of the effects of these factors on work fatigue. While previous studies have confirmed the influence of factors such as sleep quality and shift conditions on pre-service fatigue, most of these studies have focused on other working groups such as drivers and pilots. Overall, the phenomenon of pre-service fatigue is not as pronounced in construction workers at lower elevations compared to those working at higher elevations. However, construction workers working at high altitudes are experiencing widespread pre-service fatigue.',
-        order: 2,
-        why: 'After the overall contribution, the discussion logically moves to the first key finding: pre-service fatigue.'
+        text: "This study found that pre-service fatigue was the most important contributor to work-related fatigue. Pre-service fatigue was also influenced by factors such as shift patterns, sleep quality, task overload and duration of exposure to high altitude, thus pre-service fatigue also played an important role as a mediator of the effects of these factors on work fatigue. While previous studies have confirmed the influence of factors such as sleep quality and shift conditions on pre-service fatigue, most of these studies have focused on other working groups such as drivers and pilots. Overall, the phenomenon of pre-service fatigue is not as pronounced in construction workers at lower elevations compared to those working at higher elevations. However, construction workers working at high altitudes are experiencing widespread pre-service fatigue.",
+        order: 2
       },
       {
         id: 3,
-        text: 'The issue of work fatigue should also not be ignored. The duration of high-altitude exposure affected both pre-service and work fatigue, but had a greater effect on pre-service fatigue. Prolonged acclimatization to the high-altitude environment reduces the probability of pre-service fatigue more than it reduces the probability of work fatigue. This may suggest that acclimatization to low-oxygen conditions does not necessarily reduce cognitive and physical impairments brought about by work fatigue. This suggests that even after a long period of high-altitude acclimatization and achieving better control of pre-service fatigue, there is still a need to be concerned about work fatigue.',
-        order: 3,
-        why: 'This builds naturally from pre-service fatigue to the second major finding: work fatigue.'
+        text: "The issue of work fatigue should also not be ignored. The duration of high-altitude exposure affected both pre-service and work fatigue, but had a greater effect on pre-service fatigue. Prolonged acclimatization to the high-altitude environment reduces the probability of pre-service fatigue more than it reduces the probability of work fatigue. This may suggest that acclimatization to low-oxygen conditions does not necessarily reduce cognitive and physical impairments brought about by work fatigue. This suggests that even after a long period of high-altitude acclimatization and achieving better control of pre-service fatigue, there is still a need to be concerned about work fatigue.",
+        order: 3
       },
       {
         id: 4,
-        text: 'In addition, the compounding effects of pre-service fatigue and high workload on work fatigue highlight the importance of overall fatigue management. Measures that focus only on pre-service fatigue or work fatigue may be inadequate in practice and may result in flawed fatigue management. Therefore, further research should be conducted on holistic fatigue management measures for comprehensive pre-service screening and workload monitoring of construction workers for fatigue management.',
-        order: 4,
-        why: 'Once the major findings are discussed, it makes sense to move to practical implications and broader management recommendations.'
+        text: "In addition, the compounding effects of pre-service fatigue and high workload on work fatigue highlight the importance of overall fatigue management. Measures that focus only on pre-service fatigue or work fatigue may be inadequate in practice and may result in flawed fatigue management. Therefore, further research should be conducted on holistic fatigue management measures for comprehensive pre-service screening and workload monitoring of construction workers for fatigue management.",
+        order: 4
       },
       {
         id: 5,
-        text: 'Despite the contribution of this study, its limitations are recognized and need to be addressed in future research. Firstly, the respondents were drawn from only two construction projects, which may limit the generalizability of the findings to all types of construction workers. In addition, this study only theoretically identified the factors influencing pre-service fatigue and work fatigue and preliminarily analyzed their impact. In the future, researchers should further develop appropriate technologies and design corresponding management measures to control the risk of both pre-service and work fatigue in high-altitude construction.',
-        order: 5,
-        why: 'Limitations and future research typically appear near the end of a discussion section.'
+        text: "Despite the contribution of this study, its limitations are recognized and need to be addressed in future research. Firstly, the respondents were drawn from only two construction projects, which may limit the generalizability of the findings to all types of construction workers. In addition, this study only theoretically identified the factors influencing pre-service fatigue and work fatigue and preliminarily analyzed their impact. In the future, researchers should further develop appropriate technologies and design corresponding management measures to control the risk of both pre-service and work fatigue in high-altitude construction.",
+        order: 5
       }
     ];
 
-    const bank = document.getElementById('bank');
-    const orderZone = document.getElementById('discussionOrder');
     let dragged = null;
     let labelMap = {};
 
-    function shuffle(array) {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+        [copy[i], copy[j]] = [copy[j], copy[i]];
       }
-      return arr;
+      return copy;
     }
 
     function generateLabels() {
-      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-      const shuffled = shuffle(letters).slice(0, items.length);
+      const letters = shuffle(['A', 'B', 'C', 'D', 'E']);
       labelMap = {};
-      items.forEach((it, idx) => {
-        labelMap[it.id] = shuffled[idx];
+      items.forEach((it, i) => {
+        labelMap[it.id] = letters[i];
       });
-    }
-
-    function getLabel(id) {
-      return labelMap[id] || String(id);
     }
 
     function createCard(item) {
-      const card = document.createElement('div');
-      card.className = 'item';
-      card.draggable = true;
-      card.dataset.id = item.id;
-      card.dataset.order = item.order;
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.draggable = true;
+      div.dataset.id = item.id;
 
-      card.innerHTML = `
-        <div class="item-header">
-          <div class="item-text"><span class="item-label">${getLabel(item.id)}</span>${item.text}</div>
-          <div class="move-controls">
-            <button type="button" onclick="moveUp(${item.id})" title="Move up">↑</button>
-            <button type="button" onclick="moveDown(${item.id})" title="Move down">↓</button>
-          </div>
+      div.innerHTML = `
+        <div class="item-top">
+          <span class="item-label">${labelMap[item.id]}</span>
+          <span class="move-controls">
+            <button type="button" onclick="moveUp(${item.id})">↑</button>
+            <button type="button" onclick="moveDown(${item.id})">↓</button>
+          </span>
         </div>
-        <div class="item-meta" id="meta-${item.id}"></div>
+        <div class="item-text">${item.text}</div>
       `;
 
-      card.addEventListener('dragstart', () => {
-        dragged = card;
-        card.classList.add('dragging');
-      });
+      div.ondragstart = () => {
+        dragged = div;
+      };
 
-      card.addEventListener('dragend', () => {
-        card.classList.remove('dragging');
+      div.ondragend = () => {
         dragged = null;
-      });
+      };
 
-      return card;
+      return div;
     }
 
-    function setupDropzone(zone) {
-      zone.addEventListener('dragover', e => {
-        e.preventDefault();
-        zone.classList.add('active');
-      });
+    const zone = document.getElementById('zone');
 
-      zone.addEventListener('dragleave', () => {
-        zone.classList.remove('active');
-      });
+    zone.ondragover = e => e.preventDefault();
 
-      zone.addEventListener('drop', e => {
-        e.preventDefault();
-        zone.classList.remove('active');
-        if (!dragged) return;
-
-        removePlaceholder(zone);
-        zone.appendChild(dragged);
-        refreshPlaceholder();
-      });
-    }
-
-    function removePlaceholder(zone) {
-      const placeholder = zone.querySelector('.placeholder');
-      if (placeholder) placeholder.remove();
-    }
-
-    function refreshPlaceholder() {
-      const hasCards = orderZone.querySelectorAll('.item').length > 0;
-      const placeholder = orderZone.querySelector('.placeholder');
-      if (!hasCards && !placeholder) {
-        const div = document.createElement('div');
-        div.className = 'placeholder';
-        div.textContent = 'Drop all five discussion paragraphs here in the order you think makes the most sense.';
-        orderZone.appendChild(div);
-      }
-      if (hasCards && placeholder) placeholder.remove();
-    }
-
-    function getCardById(id) {
-      return document.querySelector(`.item[data-id="${id}"]`);
-    }
+    zone.ondrop = e => {
+      e.preventDefault();
+      if (dragged) zone.appendChild(dragged);
+    };
 
     function moveUp(id) {
-      const card = getCardById(id);
-      if (!card) return;
-      const parent = card.parentElement;
-      if (!parent || parent.id === 'bank') return;
-      const cards = [...parent.querySelectorAll('.item')];
-      const index = cards.indexOf(card);
-      if (index > 0) parent.insertBefore(card, cards[index - 1]);
+      const el = document.querySelector(`[data-id='${id}']`);
+      if (el && el.previousElementSibling) {
+        el.parentNode.insertBefore(el, el.previousElementSibling);
+      }
     }
 
     function moveDown(id) {
-      const card = getCardById(id);
-      if (!card) return;
-      const parent = card.parentElement;
-      if (!parent || parent.id === 'bank') return;
-      const cards = [...parent.querySelectorAll('.item')];
-      const index = cards.indexOf(card);
-      if (index < cards.length - 1) parent.insertBefore(cards[index + 1], card);
+      const el = document.querySelector(`[data-id='${id}']`);
+      if (el && el.nextElementSibling) {
+        el.parentNode.insertBefore(el.nextElementSibling, el);
+      }
     }
 
-    function clearFeedback() {
-      document.getElementById('orderFeedback').className = 'feedback';
-      document.getElementById('orderFeedback').innerHTML = '';
-      document.querySelectorAll('.item').forEach(card => {
-        card.classList.remove('correct', 'incorrect');
-        const meta = card.querySelector('.item-meta');
-        meta.classList.remove('show');
-        meta.textContent = '';
-        card.style.border = '';
-        card.style.background = '';
+    function clearClasses() {
+      [...zone.children].forEach(el => {
+        el.classList.remove('correct', 'incorrect');
       });
     }
 
-    function renderBoard() {
-      bank.innerHTML = '';
-      orderZone.innerHTML = '<div class="placeholder">Drop all five discussion paragraphs here in the order you think makes the most sense.</div>';
-      document.getElementById('score').textContent = 'Score: 0 / 5';
-      document.getElementById('status').textContent = 'Drag each paragraph into the discussion order box, then use ↑ ↓ to reorder.';
-      clearFeedback();
+    function render() {
+      zone.innerHTML = '';
       generateLabels();
-      shuffle(items).forEach(item => bank.appendChild(createCard(item)));
+      shuffle(items).forEach(i => zone.appendChild(createCard(i)));
+      document.getElementById('score').innerText = 'Score: 0 / 5';
+      const feedback = document.getElementById('feedback');
+      feedback.className = 'feedback';
+      feedback.innerHTML = '';
     }
 
     function checkAnswers() {
-      clearFeedback();
-      const cards = [...orderZone.querySelectorAll('.item')];
+      clearClasses();
       let score = 0;
-      let messages = [];
 
-      cards.forEach((card, index) => {
-        const item = items.find(x => x.id == card.dataset.id);
-        const correctOrder = item.order === index + 1;
-        const meta = card.querySelector('.item-meta');
-        meta.classList.add('show');
-
-        if (correctOrder) {
-          score += 1;
-          card.classList.add('correct');
-          meta.textContent = `Correct position (#${item.order}).`;
+      [...zone.children].forEach((el, i) => {
+        const item = items.find(x => x.id == el.dataset.id);
+        if (item.order === i + 1) {
+          el.classList.add('correct');
+          score++;
         } else {
-          card.classList.add('incorrect');
-          meta.textContent = `Should be in position #${item.order}. ${item.why}`;
-          messages.push(`<strong>${getLabel(item.id)}.</strong> should be in position #${item.order}. ${item.why}`);
+          el.classList.add('incorrect');
         }
       });
 
-      const bankCards = [...bank.querySelectorAll('.item')];
-      bankCards.forEach(card => {
-        const item = items.find(x => x.id == card.dataset.id);
-        card.classList.add('incorrect');
-        const meta = card.querySelector('.item-meta');
-        meta.classList.add('show');
-        meta.textContent = `This still needs to be placed in the discussion order at position #${item.order}. ${item.why}`;
-      });
+      document.getElementById('score').innerText = `Score: ${score} / 5`;
 
-      const feedback = document.getElementById('orderFeedback');
-      if (score === items.length && cards.length === items.length) {
+      const feedback = document.getElementById('feedback');
+      if (score === 5) {
         feedback.className = 'feedback show correct';
-        feedback.innerHTML = '<strong>Excellent.</strong> All discussion paragraphs are in the correct order.';
+        feedback.innerHTML = 'Excellent. All paragraphs are in the correct order.';
       } else {
         feedback.className = 'feedback show incorrect';
-        feedback.innerHTML = `<strong>Order check:</strong><br>${messages.length ? messages.join('<br><br>') : 'You still need to place all five paragraphs.'}`;
+        feedback.innerHTML = 'Some paragraphs are not yet in the best order. Review the sequence and try again.';
       }
-
-      document.getElementById('score').textContent = `Score: ${score} / ${items.length}`;
-      document.getElementById('status').textContent = score === items.length && cards.length === items.length
-        ? 'Excellent — the discussion is in the correct order.'
-        : 'Checked. Review the hints on the cards, then move or reorder them.';
     }
 
     function showAnswers() {
-      bank.innerHTML = '';
-      orderZone.innerHTML = '';
-      clearFeedback();
-
+      zone.innerHTML = '';
+      clearClasses();
       items
+        .slice()
         .sort((a, b) => a.order - b.order)
-        .forEach(item => {
-          const card = createCard(item);
-          card.draggable = false;
-          card.classList.add('correct');
-          const meta = card.querySelector('.item-meta');
-          meta.classList.add('show');
-          meta.textContent = `Solution position #${item.order}. ${item.why}`;
-          orderZone.appendChild(card);
-        });
+        .forEach(i => zone.appendChild(createCard(i)));
 
-      document.getElementById('orderFeedback').className = 'feedback show correct';
-      document.getElementById('orderFeedback').innerHTML = '<strong>Discussion solution shown.</strong>';
-      document.getElementById('score').textContent = 'Score: 5 / 5';
-      document.getElementById('status').textContent = 'The full solution is now displayed.';
+      [...zone.children].forEach(el => el.classList.add('correct'));
+      document.getElementById('score').innerText = 'Score: 5 / 5';
+
+      const feedback = document.getElementById('feedback');
+      feedback.className = 'feedback show correct';
+      feedback.innerHTML = 'Solution shown.';
     }
 
     function resetBoard() {
-      renderBoard();
-      refreshPlaceholder();
+      render();
     }
 
-    setupDropzone(orderZone);
-    renderBoard();
+    render();
   </script>
-  <footer style="max-width:1180px;margin:24px auto 0;padding:12px 18px;color:#6b7280;font-size:0.9rem;">
-    <hr style="border:none;border-top:1px solid #e5e7eb;margin-bottom:10px;" />
-    <div>
-      <strong>Source (adapted for educational use):</strong><br/>
-      Huang, Y., Yu, Y., Wang, Y., Gu, B., Zhang, Z., Miao, C., & Fang, D. (2024). Factors influencing fatigue of construction workers in hypoxic environments: A survey study. <em>Safety Science</em>, 177, 106569.
-    </div>
+
+  <footer style="text-align:center;color:#6b7280;font-size:0.85rem;margin-top:20px;">
+    <strong>Source (adapted for educational use):</strong> Huang, Y., Yu, Y., Wang, Y., Gu, B., Zhang, Z., Miao, C., &amp; Fang, D. (2024). <em>Factors influencing fatigue of construction workers in hypoxic environments: A survey study</em>. <em>Safety Science</em>, 177, 106569.
   </footer>
 </body>
 </html>
