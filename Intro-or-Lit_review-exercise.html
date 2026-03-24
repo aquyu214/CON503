@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction vs. Literature Review – Sort and Order</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d9e2ef;
+      --accent: #2563eb;
+      --accent-soft: #eaf2ff;
+      --good: #166534;
+      --good-bg: #ecfdf3;
+      --bad: #991b1b;
+      --bad-bg: #fef2f2;
+      --shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 28px 18px 54px;
+    }
+
+    .hero, .panel, .bank, .tips, .scorebox {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 28px;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, #eff6ff, #ffffff);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      max-width: 920px;
+    }
+
+    .controls {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.98rem;
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .primary { background: var(--accent); color: white; }
+    .secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .scorebox {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+    }
+
+    .scorebox strong { font-size: 1.05rem; }
+    .scorebox span { color: var(--muted); }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr; /* smaller left bank, larger right workspace */
+      gap: 18px;
+      align-items: start;
+    }
+
+    .bank, .panel, .tips {
+      padding: 18px;
+    }
+
+    .bank {
+      position: sticky; /* keep bank visible */
+      top: 16px;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+    }
+
+    .bank h2, .panel h2, .tips h2 {
+      margin-top: 0;
+      font-size: 1.15rem;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 0.93rem;
+      margin-top: -2px;
+      margin-bottom: 12px;
+    }
+
+    .drag-hint {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .cards {
+      display: grid;
+      gap: 12px;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .panel {
+      min-height: 520px; /* make right side more prominent */
+    }
+
+    .dropzone {
+      min-height: 460px;
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      background: #fcfdff;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .dropzone.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .placeholder {
+      color: var(--muted);
+      font-size: 0.95rem;
+      padding: 8px;
+    }
+
+    .item {
+      background: #fbfdff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      cursor: grab;
+      user-select: none;
+      margin-bottom: 10px;
+    }
+
+    .item.dragging {
+      opacity: 0.55;
+      transform: scale(0.98);
+    }
+
+    .item.correct {
+      background: #f4fff7;
+      border: 2px solid #8fd4a6;
+    }
+
+    .item.incorrect {
+      background: #fff6f6;
+      border: 2px solid #f1a6a6;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .item-text {
+      font-size: 0.98rem;
+      flex: 1;
+    }
+
+    .move-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-left: 8px;
+    }
+
+    .move-controls button {
+      padding: 6px 9px;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text);
+    }
+
+    .item-meta {
+      margin-top: 8px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      display: none;
+    }
+
+    .item-meta.show { display: block; }
+
+    .feedback {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .feedback.show { display: block; }
+    .feedback.correct {
+      background: var(--good-bg);
+      color: var(--good);
+      border: 1px solid #b7ebc6;
+    }
+    .feedback.incorrect {
+      background: var(--bad-bg);
+      color: var(--bad);
+      border: 1px solid #f5c2c7;
+    }
+
+    .tips { margin-top: 18px; }
+    .tips ul { margin: 10px 0 0 20px; }
+
+    .legend {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: white;
+    }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .columns { grid-template-columns: 1fr; }
+      .scorebox {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Introduction vs. Literature Review</h1>
+      <p class="subtitle">
+        First, sort each subtopic into the correct section. Then, arrange the subtopics in the order that makes the most sense. Use drag and drop to sort, and use the up/down arrows to adjust the order within each section.
+      </p>
+      <div class="controls">
+        <button class="primary" onclick="checkAnswers()">Check Answers</button>
+        <button class="secondary" onclick="showAnswers()">Show Solution</button>
+        <button class="secondary" onclick="resetBoard()">Reset</button>
+      </div>
+    </section>
+
+    <div class="scorebox">
+      <strong id="score">Score: 0 / 24</strong>
+      <span id="status">Sort the cards into the correct section, then order them within each section.</span>
+    </div>
+
+    <div class="layout">
+      <section class="bank">
+        <h2>Subtopic Bank</h2>
+        <p class="small-note">Drag each card into either Introduction or Literature Review.</p>
+        <div class="drag-hint">💡 Drag from here → to the right</div>
+        <div class="cards" id="bank"></div>
+      </section>
+
+      <div class="columns">
+        <section class="panel">
+          <h2>Introduction</h2>
+          <p class="small-note">Step 1: Drag here → Step 2: Use ↑ ↓ to order</p>
+          <div class="dropzone" id="introduction">
+            <div class="placeholder">Drop items here that belong in the Introduction.</div>
+          </div>
+          <div class="feedback" id="introFeedback"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Literature Review</h2>
+          <p class="small-note">Step 1: Drag here → Step 2: Use ↑ ↓ to order</p>
+          <div class="dropzone" id="literature">
+            <div class="placeholder">Drop items here that belong in the Literature Review.</div>
+          </div>
+          <div class="feedback" id="litFeedback"></div>
+        </section>
+      </div>
+    </div>
+
+    <section class="tips">
+      <h2>Quick Reminder</h2>
+      <ul>
+        <li><strong>Introduction:</strong> usually sets up the broad problem, gives brief context, highlights the gap, and states the purpose and research question.</li>
+        <li><strong>Literature Review:</strong> usually defines concepts, reviews prior studies, introduces theoretical frameworks, and develops a deeper scholarly background.</li>
+        <li><strong>Ordering:</strong> readers usually move from broader context toward a more specific focus.</li>
+      </ul>
+      <div class="legend">
+        <div class="pill">Correct section = 1 point</div>
+        <div class="pill">Correct position = 1 point</div>
+        <div class="pill">12 cards × 2 checks = 24 points</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const items = [
+      {
+        id: 1,
+        text: 'Construction remains one of the most hazardous industries globally.',
+        section: 'Introduction',
+        order: 1,
+        why: 'This is broad opening context that helps establish why the topic matters.'
+      },
+      {
+        id: 2,
+        text: 'General statistics on construction site injuries in the U.S. over the past decade.',
+        section: 'Introduction',
+        order: 2,
+        why: 'This adds supporting background evidence after the broad opening statement.'
+      },
+      {
+        id: 3,
+        text: 'Brief introduction to wearable safety devices used in construction (purpose and potential benefits).',
+        section: 'Introduction',
+        order: 3,
+        why: 'This introduces the specific topic area before moving into the gap and study focus.'
+      },
+      {
+        id: 4,
+        text: 'Gaps: Most studies focus on lab or pilot tests, not active job sites (high-level summary).',
+        section: 'Introduction',
+        order: 4,
+        why: 'This is a broad gap statement that helps justify the study.'
+      },
+      {
+        id: 5,
+        text: 'Gaps: Few studies focus on small to mid-sized contractors (high-level summary).',
+        section: 'Introduction',
+        order: 5,
+        why: 'This narrows the gap further and builds toward the specific study need.'
+      },
+      {
+        id: 6,
+        text: 'Study Purpose: To examine how wearables perform on active job sites with small crews.',
+        section: 'Introduction',
+        order: 6,
+        why: 'The purpose usually appears after the problem and gap have been established.'
+      },
+      {
+        id: 7,
+        text: 'Research Question: Do wearable safety devices reduce injury rates in real-world settings?',
+        section: 'Introduction',
+        order: 7,
+        why: 'The research question often follows the study purpose and focuses the paper.'
+      },
+      {
+        id: 8,
+        text: 'Definition and examples of wearable safety devices used in construction.',
+        section: 'Literature Review',
+        order: 1,
+        why: 'The literature review often begins by defining the core concept before discussing past studies.'
+      },
+      {
+        id: 9,
+        text: 'Brief overview of the evolution of wearable tech in safety over the past decade.',
+        section: 'Literature Review',
+        order: 2,
+        why: 'After defining the concept, it is logical to provide a brief development history.'
+      },
+      {
+        id: 10,
+        text: 'Summary of studies that evaluated effectiveness of wearables in construction (including methods and types of contractors).',
+        section: 'Literature Review',
+        order: 3,
+        why: 'This is the main review of prior empirical studies.'
+      },
+      {
+        id: 11,
+        text: 'Theoretical framework: Technology Acceptance Model (TAM) applied to adoption of wearables.',
+        section: 'Literature Review',
+        order: 4,
+        why: 'The theory helps interpret prior work and frame how the topic is understood.'
+      },
+      {
+        id: 12,
+        text: 'Contribution: This study provides practical insights based on field data from active sites.',
+        section: 'Literature Review',
+        order: 5,
+        why: 'Based on the provided solution, this is placed at the end of the literature review sequence.'
+      }
+    ];
+
+    const bank = document.getElementById('bank');
+    const introZone = document.getElementById('introduction');
+    const litZone = document.getElementById('literature');
+    let dragged = null;
+
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function createCard(item) {
+      const card = document.createElement('div');
+      card.className = 'item';
+      card.draggable = true;
+      card.dataset.id = item.id;
+      card.dataset.section = item.section;
+      card.dataset.order = item.order;
+
+      card.innerHTML = `
+        <div class="item-header">
+          <div class="item-text"><strong>${item.id}.</strong> ${item.text}</div>
+          <div class="move-controls">
+            <button type="button" onclick="moveUp(${item.id})" title="Move up">↑</button>
+            <button type="button" onclick="moveDown(${item.id})" title="Move down">↓</button>
+          </div>
+        </div>
+        <div class="item-meta" id="meta-${item.id}"></div>
+      `;
+
+      card.addEventListener('dragstart', () => {
+        dragged = card;
+        card.classList.add('dragging');
+      });
+
+      card.addEventListener('dragend', () => {
+        card.classList.remove('dragging');
+        dragged = null;
+      });
+
+      return card;
+    }
+
+    function setupDropzone(zone) {
+      zone.addEventListener('dragover', e => {
+        e.preventDefault();
+        zone.classList.add('active');
+      });
+
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('active');
+      });
+
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('active');
+        if (!dragged) return;
+        removePlaceholder(zone);
+        zone.appendChild(dragged);
+        refreshPlaceholders();
+      });
+    }
+
+    function removePlaceholder(zone) {
+      const placeholder = zone.querySelector('.placeholder');
+      if (placeholder) placeholder.remove();
+    }
+
+    function refreshPlaceholders() {
+      [introZone, litZone].forEach(zone => {
+        const placeholderText = zone.id === 'introduction'
+          ? 'Drop items here that belong in the Introduction.'
+          : 'Drop items here that belong in the Literature Review.';
+        const hasCards = zone.querySelectorAll('.item').length > 0;
+        const placeholder = zone.querySelector('.placeholder');
+        if (!hasCards && !placeholder) {
+          const div = document.createElement('div');
+          div.className = 'placeholder';
+          div.textContent = placeholderText;
+          zone.appendChild(div);
+        }
+        if (hasCards && placeholder) placeholder.remove();
+      });
+    }
+
+    function getCardById(id) {
+      return document.querySelector(`.item[data-id="${id}"]`);
+    }
+
+    function moveUp(id) {
+      const card = getCardById(id);
+      if (!card) return;
+      const parent = card.parentElement;
+      if (!parent || parent.id === 'bank') return;
+      const cards = [...parent.querySelectorAll('.item')];
+      const index = cards.indexOf(card);
+      if (index > 0) parent.insertBefore(card, cards[index - 1]);
+    }
+
+    function moveDown(id) {
+      const card = getCardById(id);
+      if (!card) return;
+      const parent = card.parentElement;
+      if (!parent || parent.id === 'bank') return;
+      const cards = [...parent.querySelectorAll('.item')];
+      const index = cards.indexOf(card);
+      if (index < cards.length - 1) parent.insertBefore(cards[index + 1], card);
+    }
+
+    function clearFeedback() {
+      document.getElementById('introFeedback').className = 'feedback';
+      document.getElementById('introFeedback').innerHTML = '';
+      document.getElementById('litFeedback').className = 'feedback';
+      document.getElementById('litFeedback').innerHTML = '';
+      document.querySelectorAll('.item').forEach(card => {
+        card.classList.remove('correct', 'incorrect');
+        const meta = card.querySelector('.item-meta');
+        meta.classList.remove('show');
+        meta.textContent = '';
+      });
+    }
+
+    function renderBoard() {
+      bank.innerHTML = '';
+      introZone.innerHTML = '<div class="placeholder">Drop items here that belong in the Introduction.</div>';
+      litZone.innerHTML = '<div class="placeholder">Drop items here that belong in the Literature Review.</div>';
+      document.getElementById('score').textContent = 'Score: 0 / 24';
+      document.getElementById('status').textContent = 'Sort the cards into the correct section, then order them within each section.';
+      clearFeedback();
+      shuffle(items).forEach(item => bank.appendChild(createCard(item)));
+    }
+
+    function scoreZone(zoneEl, zoneName) {
+      const cards = [...zoneEl.querySelectorAll('.item')];
+      let messages = [];
+      let points = 0;
+
+      cards.forEach((card, index) => {
+        const item = items.find(x => x.id == card.dataset.id);
+        const correctSection = item.section === zoneName;
+        const correctOrder = item.order === index + 1;
+
+        if (correctSection) points += 1;
+        if (correctSection && correctOrder) points += 1;
+
+        const meta = card.querySelector('.item-meta');
+        meta.classList.add('show');
+
+        if (correctSection && correctOrder) {
+          card.classList.add('correct');
+          meta.textContent = `Correct section and correct order (#${item.order}).`;
+        } else {
+          card.classList.add('incorrect');
+          let parts = [];
+          if (!correctSection) parts.push(`should be in ${item.section}`);
+          if (correctSection && !correctOrder) parts.push(`should be position #${item.order} in ${item.section}`);
+          meta.textContent = `${parts.join('; ')}. ${item.why}`;
+          messages.push(`<strong>${item.id}.</strong> ${parts.join('; ')}. ${item.why}`);
+        }
+      });
+
+      return { points, messages, count: cards.length };
+    }
+
+    function checkAnswers() {
+      clearFeedback();
+
+      const introResult = scoreZone(introZone, 'Introduction');
+      const litResult = scoreZone(litZone, 'Literature Review');
+      const totalPoints = introResult.points + litResult.points;
+
+      const bankCards = [...bank.querySelectorAll('.item')];
+      bankCards.forEach(card => {
+        const item = items.find(x => x.id == card.dataset.id);
+        card.classList.add('incorrect');
+        const meta = card.querySelector('.item-meta');
+        meta.classList.add('show');
+        meta.textContent = `This still needs to be placed in ${item.section}, position #${item.order}. ${item.why}`;
+      });
+
+      const totalPlaced = introResult.count + litResult.count;
+      const introFeedback = document.getElementById('introFeedback');
+      const litFeedback = document.getElementById('litFeedback');
+
+      if (introResult.messages.length === 0 && introResult.count === 7) {
+        introFeedback.className = 'feedback show correct';
+        introFeedback.innerHTML = '<strong>Introduction:</strong> All items currently here are in the correct section and order.';
+      } else {
+        introFeedback.className = 'feedback show incorrect';
+        introFeedback.innerHTML = `<strong>Introduction check:</strong><br>${introResult.messages.length ? introResult.messages.join('<br><br>') : 'You still need to place all Introduction items.'}`;
+      }
+
+      if (litResult.messages.length === 0 && litResult.count === 5) {
+        litFeedback.className = 'feedback show correct';
+        litFeedback.innerHTML = '<strong>Literature Review:</strong> All items currently here are in the correct section and order.';
+      } else {
+        litFeedback.className = 'feedback show incorrect';
+        litFeedback.innerHTML = `<strong>Literature Review check:</strong><br>${litResult.messages.length ? litResult.messages.join('<br><br>') : 'You still need to place all Literature Review items.'}`;
+      }
+
+      document.getElementById('score').textContent = `Score: ${totalPoints} / 24`;
+      document.getElementById('status').textContent = totalPlaced === items.length && totalPoints === 24
+        ? 'Excellent — everything is in the correct section and order.'
+        : 'Checked. Review the hints on the cards, then move or reorder them.';
+    }
+
+    function showAnswers() {
+      bank.innerHTML = '';
+      introZone.innerHTML = '';
+      litZone.innerHTML = '';
+      clearFeedback();
+
+      items
+        .filter(item => item.section === 'Introduction')
+        .sort((a, b) => a.order - b.order)
+        .forEach(item => {
+          const card = createCard(item);
+          card.draggable = false;
+          card.classList.add('correct');
+          const meta = card.querySelector('.item-meta');
+          meta.classList.add('show');
+          meta.textContent = `Solution position #${item.order}. ${item.why}`;
+          introZone.appendChild(card);
+        });
+
+      items
+        .filter(item => item.section === 'Literature Review')
+        .sort((a, b) => a.order - b.order)
+        .forEach(item => {
+          const card = createCard(item);
+          card.draggable = false;
+          card.classList.add('correct');
+          const meta = card.querySelector('.item-meta');
+          meta.classList.add('show');
+          meta.textContent = `Solution position #${item.order}. ${item.why}`;
+          litZone.appendChild(card);
+        });
+
+      document.getElementById('introFeedback').className = 'feedback show correct';
+      document.getElementById('introFeedback').innerHTML = '<strong>Introduction solution shown.</strong>';
+      document.getElementById('litFeedback').className = 'feedback show correct';
+      document.getElementById('litFeedback').innerHTML = '<strong>Literature Review solution shown.</strong>';
+      document.getElementById('score').textContent = 'Score: 24 / 24';
+      document.getElementById('status').textContent = 'The full solution is now displayed.';
+    }
+
+    function resetBoard() {
+      renderBoard();
+      refreshPlaceholders();
+    }
+
+    setupDropzone(introZone);
+    setupDropzone(litZone);
+    renderBoard();
+  </script>
+</body>
+</html>
