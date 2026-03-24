@@ -99,7 +99,7 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 260px 1fr; /* smaller left bank, larger right workspace */
+      grid-template-columns: 260px 1fr;
       gap: 18px;
       align-items: start;
     }
@@ -109,7 +109,7 @@
     }
 
     .bank {
-      position: sticky; /* keep bank visible */
+      position: sticky;
       top: 16px;
       max-height: calc(100vh - 40px);
       overflow-y: auto;
@@ -145,7 +145,7 @@
     }
 
     .panel {
-      min-height: 520px; /* make right side more prominent */
+      min-height: 520px;
     }
 
     .dropzone {
@@ -203,6 +203,22 @@
     .item-text {
       font-size: 0.98rem;
       flex: 1;
+    }
+
+    .item-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #eaf2ff;
+      border: 1px solid #cfe0ff;
+      color: #1d4ed8;
+      font-weight: 700;
+      margin-right: 8px;
+      vertical-align: middle;
     }
 
     .move-controls {
@@ -274,6 +290,10 @@
         flex-direction: column;
         align-items: flex-start;
       }
+      .bank {
+        position: static;
+        max-height: none;
+      }
     }
   </style>
 </head>
@@ -344,8 +364,6 @@
 
   <script>
     const items = [
-      // NOTE: 'id' is internal only. Display labels are randomized each load.
-
       {
         id: 1,
         text: 'Construction remains one of the most hazardous industries globally.',
@@ -436,6 +454,7 @@
     const introZone = document.getElementById('introduction');
     const litZone = document.getElementById('literature');
     let dragged = null;
+    let labelMap = {};
 
     function shuffle(array) {
       const arr = [...array];
@@ -444,6 +463,19 @@
         [arr[i], arr[j]] = [arr[j], arr[i]];
       }
       return arr;
+    }
+
+    function generateLabels() {
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      const shuffled = shuffle(letters).slice(0, items.length);
+      labelMap = {};
+      items.forEach((it, idx) => {
+        labelMap[it.id] = shuffled[idx];
+      });
+    }
+
+    function getLabel(id) {
+      return labelMap[id] || String(id);
     }
 
     function createCard(item) {
@@ -456,7 +488,9 @@
 
       card.innerHTML = `
         <div class="item-header">
-          <div class="item-text"><strong>${labelMap[item.id]}.</strong> ${item.text}</div>
+          <div class="item-text">
+            <span class="item-label">${getLabel(item.id)}</span>${item.text}
+          </div>
           <div class="move-controls">
             <button type="button" onclick="moveUp(${item.id})" title="Move up">↑</button>
             <button type="button" onclick="moveDown(${item.id})" title="Move down">↓</button>
@@ -496,12 +530,13 @@
         removePlaceholder(zone);
         zone.appendChild(dragged);
 
-        // 🔥 NEW: immediate partial correctness feedback
         const item = items.find(x => x.id == dragged.dataset.id);
         const correctSection = item.section;
         const currentSection = zone.id === 'introduction' ? 'Introduction' : 'Literature Review';
 
         dragged.classList.remove('correct', 'incorrect');
+        dragged.style.border = '';
+        dragged.style.background = '';
 
         if (correctSection === currentSection) {
           dragged.style.border = '2px solid #8fd4a6';
@@ -511,20 +546,6 @@
           dragged.style.background = '#fff6f6';
         }
 
-        refreshPlaceholders();
-      });
-    });
-
-      zone.addEventListener('dragleave', () => {
-        zone.classList.remove('active');
-      });
-
-      zone.addEventListener('drop', e => {
-        e.preventDefault();
-        zone.classList.remove('active');
-        if (!dragged) return;
-        removePlaceholder(zone);
-        zone.appendChild(dragged);
         refreshPlaceholders();
       });
     }
@@ -585,17 +606,8 @@
         const meta = card.querySelector('.item-meta');
         meta.classList.remove('show');
         meta.textContent = '';
-      });
-    }
-
-    let labelMap = {};
-
-    function generateLabels() {
-      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-      const shuffled = shuffle(letters).slice(0, items.length);
-      labelMap = {};
-      items.forEach((it, idx) => {
-        labelMap[it.id] = shuffled[idx];
+        card.style.border = '';
+        card.style.background = '';
       });
     }
 
@@ -629,14 +641,14 @@
 
         if (correctSection && correctOrder) {
           card.classList.add('correct');
-          meta.textContent = `Correct section and correct order (#${item.order}).`;
+          meta.textContent = `Correct section and correct order (${getLabel(item.id)} is in position #${item.order}).`;
         } else {
           card.classList.add('incorrect');
           let parts = [];
           if (!correctSection) parts.push(`should be in ${item.section}`);
           if (correctSection && !correctOrder) parts.push(`should be position #${item.order} in ${item.section}`);
           meta.textContent = `${parts.join('; ')}. ${item.why}`;
-          messages.push(`<strong>${labelMap[item.id]}.</strong> ${parts.join('; ')}. ${item.why}`);
+          messages.push(`<strong>${getLabel(item.id)}.</strong> ${parts.join('; ')}. ${item.why}`);
         }
       });
 
