@@ -282,7 +282,9 @@
     <section class="hero">
       <h1>Introduction vs. Literature Review</h1>
       <p class="subtitle">
-        First, sort each subtopic into the correct section. Then, arrange the subtopics in the order that makes the most sense. Use drag and drop to sort, and use the up/down arrows to adjust the order within each section.
+        In this exercise, you will work with a research study about the use of wearable safety devices in construction. The study focuses on understanding how these devices are used in real-world jobsite conditions and whether they help improve worker safety.
+        <br><br>
+        Your task is to organize the key subtopics of this study into the correct sections of a research paper (Introduction vs. Literature Review), and then arrange them in a logical order within each section.
       </p>
       <div class="controls">
         <button class="primary" onclick="checkAnswers()">Check Answers</button>
@@ -342,6 +344,8 @@
 
   <script>
     const items = [
+      // NOTE: 'id' is internal only. Display labels are randomized each load.
+
       {
         id: 1,
         text: 'Construction remains one of the most hazardous industries globally.',
@@ -452,7 +456,7 @@
 
       card.innerHTML = `
         <div class="item-header">
-          <div class="item-text"><strong>${item.id}.</strong> ${item.text}</div>
+          <div class="item-text"><strong>${labelMap[item.id]}.</strong> ${item.text}</div>
           <div class="move-controls">
             <button type="button" onclick="moveUp(${item.id})" title="Move up">↑</button>
             <button type="button" onclick="moveDown(${item.id})" title="Move down">↓</button>
@@ -479,6 +483,37 @@
         e.preventDefault();
         zone.classList.add('active');
       });
+
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('active');
+      });
+
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('active');
+        if (!dragged) return;
+
+        removePlaceholder(zone);
+        zone.appendChild(dragged);
+
+        // 🔥 NEW: immediate partial correctness feedback
+        const item = items.find(x => x.id == dragged.dataset.id);
+        const correctSection = item.section;
+        const currentSection = zone.id === 'introduction' ? 'Introduction' : 'Literature Review';
+
+        dragged.classList.remove('correct', 'incorrect');
+
+        if (correctSection === currentSection) {
+          dragged.style.border = '2px solid #8fd4a6';
+          dragged.style.background = '#f4fff7';
+        } else {
+          dragged.style.border = '2px solid #f1a6a6';
+          dragged.style.background = '#fff6f6';
+        }
+
+        refreshPlaceholders();
+      });
+    });
 
       zone.addEventListener('dragleave', () => {
         zone.classList.remove('active');
@@ -553,6 +588,17 @@
       });
     }
 
+    let labelMap = {};
+
+    function generateLabels() {
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      const shuffled = shuffle(letters).slice(0, items.length);
+      labelMap = {};
+      items.forEach((it, idx) => {
+        labelMap[it.id] = shuffled[idx];
+      });
+    }
+
     function renderBoard() {
       bank.innerHTML = '';
       introZone.innerHTML = '<div class="placeholder">Drop items here that belong in the Introduction.</div>';
@@ -560,6 +606,8 @@
       document.getElementById('score').textContent = 'Score: 0 / 24';
       document.getElementById('status').textContent = 'Sort the cards into the correct section, then order them within each section.';
       clearFeedback();
+
+      generateLabels();
       shuffle(items).forEach(item => bank.appendChild(createCard(item)));
     }
 
@@ -588,7 +636,7 @@
           if (!correctSection) parts.push(`should be in ${item.section}`);
           if (correctSection && !correctOrder) parts.push(`should be position #${item.order} in ${item.section}`);
           meta.textContent = `${parts.join('; ')}. ${item.why}`;
-          messages.push(`<strong>${item.id}.</strong> ${parts.join('; ')}. ${item.why}`);
+          messages.push(`<strong>${labelMap[item.id]}.</strong> ${parts.join('; ')}. ${item.why}`);
         }
       });
 
