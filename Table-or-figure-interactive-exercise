@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Table or Figure? Interactive Exercise</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #dbe3ee;
+      --accent: #2563eb;
+      --accent-soft: #eaf2ff;
+      --good: #166534;
+      --good-bg: #ecfdf3;
+      --bad: #991b1b;
+      --bad-bg: #fef2f2;
+      --shadow: 0 10px 30px rgba(31, 41, 55, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 18px 60px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #eff6ff, #ffffff);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.98rem;
+      cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .scorebar {
+      margin: 22px 0 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: white;
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .scorebar strong { font-size: 1.05rem; }
+    .scorebar span { color: var(--muted); }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+    }
+
+    .scenario {
+      margin-bottom: 16px;
+      font-size: 1rem;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .option {
+      flex: 1 1 180px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: #fafcff;
+    }
+
+    .option label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 96px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 12px;
+      font: inherit;
+      resize: vertical;
+      background: #fcfdff;
+    }
+
+    .feedback {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .feedback.show { display: block; }
+    .feedback.correct {
+      background: var(--good-bg);
+      color: var(--good);
+      border: 1px solid #b7ebc6;
+    }
+    .feedback.incorrect {
+      background: var(--bad-bg);
+      color: var(--bad);
+      border: 1px solid #f5c2c7;
+    }
+
+    .why {
+      margin-top: 8px;
+      color: var(--text);
+    }
+
+    .tipbox {
+      margin-top: 26px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .tipbox h3 { margin-top: 0; }
+    .tipbox ul {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 640px) {
+      .scorebar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Table or Figure?</h1>
+      <p class="subtitle">
+        For each scenario, choose whether a <strong>table</strong> or a <strong>figure</strong> would be the better way to present the information in a paper, then explain your reasoning.
+      </p>
+      <div class="controls">
+        <button class="primary" onclick="checkAnswers()">Check Answers</button>
+        <button class="secondary" onclick="showModelAnswers()">Show Model Answers</button>
+        <button class="secondary" onclick="resetExercise()">Reset</button>
+      </div>
+    </section>
+
+    <div class="scorebar">
+      <strong id="score">Score: 0 / 4</strong>
+      <span id="status">Select an answer for each scenario, then click “Check Answers.”</span>
+    </div>
+
+    <div class="grid" id="exercise"></div>
+
+    <section class="tipbox">
+      <h3>Quick Reminder</h3>
+      <ul>
+        <li>Use a <strong>figure</strong> when you want readers to quickly see patterns, relationships, comparisons, or trends.</li>
+        <li>Use a <strong>table</strong> when readers need exact values, categories, or detailed descriptive information.</li>
+      </ul>
+      <p class="footer-note">This version is designed for classroom practice and immediate feedback.</p>
+    </section>
+  </div>
+
+  <script>
+    const scenarios = [
+      {
+        title: 'Scenario 1',
+        prompt: 'You tracked the average daily productivity of five concrete crews over a 30-day period. Your goal is to show productivity trends across time for each crew.',
+        answer: 'figure',
+        reason: 'A figure is better because the main goal is to show trends over time. A line graph would allow readers to quickly compare patterns, rises, drops, and differences across the five crews.'
+      },
+      {
+        title: 'Scenario 2',
+        prompt: 'You want to present the demographic profile of survey respondents (e.g., role on site, years of experience, etc.). The goal is to provide exact, descriptive characteristics.',
+        answer: 'table',
+        reason: 'A table is better because the goal is to present exact descriptive information. Readers may want to see specific categories, counts, percentages, or years of experience clearly and precisely.'
+      },
+      {
+        title: 'Scenario 3',
+        prompt: 'You compared the number of safety incidents across five construction sites, broken down by incident type (e.g., falls, equipment-related, electrical). You want to show both the total number and the distribution by type for each site.',
+        answer: 'figure',
+        reason: 'A figure is often the better choice here because it can visually show both comparison and composition at the same time. For example, a stacked bar chart can show total incidents and how each incident type contributes to the total at each site.'
+      },
+      {
+        title: 'Scenario 4',
+        prompt: 'You analyzed the relationship between jobsite noise level and reported worker stress levels. You are trying to show whether there is a correlation between the two.',
+        answer: 'figure',
+        reason: 'A figure is better because correlation is usually easier to see visually. A scatterplot can show whether higher noise levels tend to be associated with higher stress levels and whether the relationship appears strong, weak, or absent.'
+      }
+    ];
+
+    const exercise = document.getElementById('exercise');
+
+    function renderCards() {
+      exercise.innerHTML = scenarios.map((item, index) => `
+        <article class="card">
+          <h2>${item.title}</h2>
+          <p class="scenario">${item.prompt}</p>
+
+          <div class="options">
+            <div class="option">
+              <label>
+                <input type="radio" name="q${index}" value="table" />
+                Table
+              </label>
+            </div>
+            <div class="option">
+              <label>
+                <input type="radio" name="q${index}" value="figure" />
+                Figure
+              </label>
+            </div>
+          </div>
+
+          <label for="explain${index}"><strong>Your explanation:</strong></label>
+          <textarea id="explain${index}" placeholder="Why did you choose table or figure?"></textarea>
+
+          <div class="feedback" id="feedback${index}"></div>
+        </article>
+      `).join('');
+    }
+
+    function checkAnswers() {
+      let score = 0;
+      let answered = 0;
+
+      scenarios.forEach((item, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        const feedback = document.getElementById(`feedback${index}`);
+
+        if (selected) {
+          answered += 1;
+          const isCorrect = selected.value === item.answer;
+          if (isCorrect) score += 1;
+
+          feedback.className = `feedback show ${isCorrect ? 'correct' : 'incorrect'}`;
+          feedback.innerHTML = `
+            <strong>${isCorrect ? 'Correct.' : 'Not quite.'}</strong>
+            The better choice here is <strong>${capitalize(item.answer)}</strong>.
+            <div class="why"><strong>Why:</strong> ${item.reason}</div>
+          `;
+        } else {
+          feedback.className = 'feedback show incorrect';
+          feedback.innerHTML = '<strong>No answer selected.</strong> Please choose either table or figure.';
+        }
+      });
+
+      document.getElementById('score').textContent = `Score: ${score} / ${scenarios.length}`;
+      document.getElementById('status').textContent = answered === scenarios.length
+        ? 'Feedback is now shown for all scenarios.'
+        : 'Some scenarios are still unanswered.';
+    }
+
+    function showModelAnswers() {
+      scenarios.forEach((item, index) => {
+        const feedback = document.getElementById(`feedback${index}`);
+        feedback.className = 'feedback show correct';
+        feedback.innerHTML = `
+          <strong>Model answer:</strong> ${capitalize(item.answer)}.
+          <div class="why"><strong>Why:</strong> ${item.reason}</div>
+        `;
+      });
+      document.getElementById('status').textContent = 'Model answers are displayed below each scenario.';
+    }
+
+    function resetExercise() {
+      document.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
+      document.querySelectorAll('textarea').forEach(area => area.value = '');
+      document.querySelectorAll('.feedback').forEach(box => {
+        box.className = 'feedback';
+        box.innerHTML = '';
+      });
+      document.getElementById('score').textContent = 'Score: 0 / 4';
+      document.getElementById('status').textContent = 'Select an answer for each scenario, then click “Check Answers.”';
+    }
+
+    function capitalize(word) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }
+
+    renderCards();
+  </script>
+</body>
+</html>
