@@ -37,10 +37,14 @@
     }
 
     .hero, .panel, .tips, .scorebox, .bank {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
+      position: sticky;
+      top: 16px;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+    }
+
+    .panel {
+      min-height: 600px; /* slightly taller for better balance */
     }
 
     .hero {
@@ -99,7 +103,7 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 280px 1fr;
+      grid-template-columns: 1fr 1fr; /* equal width for bank and workspace */
       gap: 18px;
       align-items: start;
     }
