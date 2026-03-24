@@ -69,11 +69,15 @@
       background: white;
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
       cursor: grab;
-      line-height: 1.6; /* better readability for long paragraphs */
-      font-size: 0.95rem;
+      line-height: 1.7;
+      font-size: 0.96rem;
+      width: 100%;
+      display: block;
+      overflow: visible; /* ensure full paragraph shows */
+      white-space: normal; /* prevent truncation */
     }
 
     .item.correct { border: 2px solid #8fd4a6; background: #f4fff7; }
@@ -85,7 +89,18 @@
       color: #2563eb;
     }
 
-    .move-controls { float: right; }
+    .move-controls {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      display: flex;
+      gap: 4px;
+    }
+
+    .item {
+      position: relative; /* needed for absolute buttons */
+      padding-right: 60px; /* space for buttons so text doesn't get cut */
+    }
 
     .feedback {
       margin-top: 12px;
